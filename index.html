@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/initStyle.css">
+
+    <title>apps by leizingyiu</title>
+
+    <style>
+        body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            line-height: 2em;
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 2em;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Apps by Leizingyiu</h1>
+
+    <script>
+
+        let items = [
+            'deepLayers',
+            'LRC_Maker'
+        ];
+
+        let frag = document.createDocumentFragment()
+        let ul = document.createElement('ul');
+        for (item of items) {
+            console.log(item);
+            let li = document.createElement('li');
+            let a = document.createElement('a');
+            a.setAttribute('href', `./${item}/`);
+            a.innerText = item;
+            li.appendChild(a);
+            ul.appendChild(li);
+        }
+        frag.appendChild(ul);
+        document.querySelector('body').appendChild(frag);
+
+    </script>
+
+</body>
+
+</html>

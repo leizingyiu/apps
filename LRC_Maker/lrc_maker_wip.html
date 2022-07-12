@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta http-equiv="Window-target" content="_top">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+
+
+
+    <meta name="description" content="">
+    <meta name="keywords" content="LRC,LRC_maker,lyrics_maker,lyrics_generator,LRC_generator">
+    <meta name="copyright" content="Leizingyiu" />
+    <meta name="author" content="Leizingyiu" />
+
+    <link href="http://fonts.cdnfonts.com/css/xhers" rel="stylesheet">
+
+
+    <title>LRC MAKER -- BY LEIZINGYIU</title>
+    <link rel="stylesheet" href="./initStyle.css">
+
+    <style data-comment="tool styling">
+        html {
+            overflow-x: hidden;
+            font-size: max(1.6vmin, 10px);
+        }
+
+        html * {
+            cursor: default;
+        }
+
+        html label,
+        html label * {
+            cursor: pointer;
+        }
+
+        html pre,
+        html pre * {
+            cursor: text;
+        }
+
+        html pre * {
+            cursor: inherit;
+        }
+
+        html a,
+        html a * {
+            cursor: pointer;
+        }
+
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            --in-color: hsl(210deg 100% 50% / 30%);
+            --out-color: hsl(268deg 100% 50% / 30%);
+            --remove-color: hsl(339deg 100% 50% / 30%);
+
+            --in-key-color: hsl(210deg 100% 50% / 80%);
+            --out-key-color: hsl(268deg 100% 50% / 80%);
+            --remove-key-color: hsl(339deg 100% 50% / 80%);
+
+            --hili-color: #00eaff;
+        }
+
+        body {
+            max-width: 80vw;
+            min-width: 750px;
+            margin: 0 auto;
+
+        }
+
+        #cover {
+            height: 72vh;
+            position: relative;
+            --font-size-factor: 0.72;
+
+            letter-spacing: 0.04em;
+            font-size: calc(1rem * var(--font-size-factor));
+            text-transform: inherit;
+        }
+
+        #cover,
+        #cover * {
+            transition: all 0.2s ease;
+        }
+
+        #cover dl {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            height: 100%;
+            padding: 4em 1em;
+            box-sizing: border-box;
+        }
+
+        #cover dl dt::after {
+            content: '';
+            width: 100%;
+            height: 40vh;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-image: url(./lrc_maker.svg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.64;
+            transition: opacity 0.3s ease, height 0.3s ease;
+        }
+
+
+
+        #cover dl dt,
+        #cover dl dd {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            position: relative;
+
+            background-color: rgb(255 255 255 / 40%);
+        }
+
+        #cover dl dd {
+            align-items: flex-end;
+        }
+
+        #cover dl dt>*:last-child,
+        #cover dl dd>*:last-child {
+            text-align: right;
+            white-space: nowrap;
+            margin-left: 1em;
+        }
+
+        #cover dl dt h1,
+        #cover dl dt h1>* {
+            display: block;
+            font-weight: 300;
+            margin-bottom: 0.25em;
+        }
+
+
+        #cover dl dt h2 {
+            font-family: 'Xhers', sans-serif;
+            font-size: calc(var(--font-size-factor) * 7.2rem);
+            line-height: 0.8em;
+        }
+
+        #cover dl dt h2>* {
+            display: block;
+            margin-bottom: 0.2em;
+            width: 100%;
+        }
+
+        #cover dl dt h1 em {
+            font-size: calc(var(--font-size-factor) * 5.2rem);
+            line-height: 1.05em;
+            position: relative;
+        }
+
+        #cover dl dt h1 q {
+            font-size: calc(var(--font-size-factor) * 2.4rem);
+            white-space: break-spaces;
+
+            quotes: none;
+            position: relative;
+        }
+
+        #cover dl dt h1 small {
+            font-size: calc(var(--font-size-factor) * 1.6rem);
+            color: #888;
+            font-weight: 300;
+        }
+
+        #cover dl dd p {
+            font-size: calc(var(--font-size-factor) * 1.8rem);
+        }
+
+        #cover dl dd p small {
+            display: block;
+            font-size: calc(var(--font-size-factor) * 1.2rem);
+            margin-top: 0.66em;
+            color: #888;
+
+        }
+
+        #cover dl dd span {
+            font-size: calc(var(--font-size-factor) * 1.8rem);
+            text-decoration: underline;
+        }
+
+
+        .collapser {
+            position: absolute;
+            font-size: 1rem;
+            left: 100%;
+            top: 0em;
+            padding: 0 1em;
+            --collapser-transition: max-width 0.5s ease,
+                max-height 0.5s ease,
+                opacity 0.5s ease,
+                width 0.5s ease,
+                height 0.5s ease,
+                letter-spacing 0.5s ease,
+                color 0.4s ease,
+                top 0.3s ease;
+        }
+
+        .collapser>* {
+            display: block;
+            position: relative;
+
+        }
+
+        .collapser>*>* {
+            display: block;
+            height: fit-content;
+            transition: var(--collapser-transition);
+            white-space: nowrap;
+            text-transform: capitalize;
+
+            opacity: 0.36 !important;
+        }
+
+        .collapser:hover>*>* {
+            opacity: 1 !important;
+        }
+
+        .collapsed .collapser {
+            padding: 0 1em !important;
+        }
+
+        .collapsed .collapser>*>* {
+            transition: var(--collapser-transition);
+        }
+
+        .collapser>*>*:first-of-type,
+        .collapsed .collapser>*>*:last-of-type {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            opacity: 1;
+            letter-spacing: 0.02em;
+            color: rgba(0 0 0 /100%);
+            overflow: unset;
+        }
+
+        .collapser>*>*:last-of-type,
+        .collapsed .collapser>*>*:first-of-type {
+            position: absolute;
+            left: 0;
+            top: 0;
+            max-width: 0;
+            max-height: 0;
+            opacity: 0;
+            color: rgba(0, 0, 0, 0);
+            letter-spacing: 0.1em;
+            overflow: hidden;
+        }
+
+        .collapser::before {
+            content: '';
+            display: block;
+            width: 1em;
+            height: 1em;
+            border-top: solid 1px rgba(0 0 0 /40%);
+            border-right: solid 1px rgba(0 0 0 /40%);
+            position: absolute;
+            right: 100%;
+            top: 0em;
+            transform: scale(0.6) rotate(135deg);
+            transition: transform 0.36s ease;
+        }
+
+        .collapsed .collapser::before {
+            transform: scale(0.6) rotate(45deg);
+
+        }
+
+        #cover .collapser {
+            top: calc(4rem * var(--font-size-factor));
+        }
+
+        #cover.collapsed {
+            height: fit-content;
+            padding: 0.5rem 1rem 0;
+        }
+
+        #cover.collapsed .collapser {
+            top: 0.5rem;
+            padding: 0 1rem !important;
+        }
+
+        #cover.collapsed dl {
+            padding: 1rem;
+            width: 100%;
+        }
+
+        #cover.collapsed dl dt::after {
+            height: 0;
+            opacity: 0;
+        }
+
+        #cover.collapsed * {
+            display: inline-flex;
+            flex-direction: row;
+            font-size: 1rem;
+            width: max-content;
+            letter-spacing: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 1.5em !important;
+            justify-content: space-between;
+            white-space: nowrap;
+        }
+
+        #cover.collapsed br {
+            display: none;
+        }
+
+        #cover.collapsed dt h1 em::after {
+            content: '/ An LRC editor';
+            display: inline-block;
+            margin: 0 0.5em;
+            opacity: 1;
+            position: relative;
+            color: black;
+            left: 0;
+            top: 0;
+            transform: none;
+            background: none;
+        }
+
+        #cover.collapsed dl>* {
+            display: inline-block;
+        }
+
+        #cover.collapsed dt h1 small,
+        /* #cover.collapsed dt h1 q, */
+        #cover.collapsed dt h2,
+        #cover.collapsed dt h2 *,
+        #cover.collapsed dd p,
+        #cover.collapsed dd p * {
+            width: 0 !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            opacity: 0;
+        }
+
+        #cover.collapsed,
+        #cover.collapsed * {
+            transition: all 0.2s ease;
+        }
+
+        @media screen and (max-width: 150vh) {
+            #cover.collapsed dt h1 q {
+                width: 0 !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                white-space: nowrap;
+                overflow: hidden;
+                display: inline-block;
+                opacity: 0;
+            }
+        }
+
+        #header {
+            position: sticky;
+            top: 0;
+
+            background-color: rgba(255, 255, 255, 0.72);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            font-size: 1em;
+        }
+
+        div#header:after {
+            content: '';
+            width: 100vw;
+            height: 1em;
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translate(-50%, 0);
+            display: block;
+            background: rgba(0, 0, 0, 0.12);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.08) 4%, rgba(0, 0, 0, 0.04) 12%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        label {
+            cursor: pointer;
+        }
+
+        label>input {
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        #songbox {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            align-content: center;
+            align-items: flex-end;
+
+            padding: 1rem 1rem 0.5rem;
+        }
+
+        #header label {
+            display: inline-flex;
+            flex-direction: column;
+            border-radius: 1px;
+            align-self: flex-start;
+
+            box-shadow: 0 0 0 0.5em rgb(255 255 255/100%), 0 0 0.5em 0.25em rgb(0 0 0 / 16%), 0 0 2em 0.33em rgb(0 0 0 / 12%);
+            transform: translate(0, 0);
+            transition: opacity 0.36s ease, box-shadow 0.36s ease, transform 0.36s ease, max-height 0.36s ease, max-width 0.36s ease;
+
+            background: rgb(255 255 255 / 40%);
+
+        }
+
+        #header label:hover {
+            box-shadow: 0 0 0 1em rgb(255 255 255 / 90%), 0 0.33em 2em 0.75em rgb(0 0 0 / 12%);
+            transform: translate(0, -0.33em);
+
+            background: rgb(255 255 255 / 90%);
+        }
+
+        #header label * {
+            background: transparent;
+        }
+
+        #header label>small {
+            font-size: 0.5em;
+            opacity: 0.5;
+        }
+
+        #header h2 {
+            font-size: 1.75em;
+            padding-bottom: 0.5em;
+            text-transform: capitalize;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #header #songbox h2 {
+            padding-bottom: 0;
+        }
+
+        #header h2 span {
+            font-size: 1em;
+        }
+
+        #header h2 small {
+            font-size: 0.64em;
+            opacity: 0.72;
+        }
+
+        #header p {
+            margin-top: 1em;
+        }
+
+        #songName {
+            margin-bottom: 0.5em;
+        }
+
+        #titleAndPlayer {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            align-self: flex-start;
+        }
+
+        #lrcSettings {
+            display: flex;
+        }
+
+        #songbox>*,
+
+        #lrcSettings>* {
+            margin-left: 2em;
+        }
+
+        #songbox>*:first-child,
+        #lrcSettings>*:first-child {
+            margin-left: 0;
+        }
+
+
+
+        #lrcInfo {
+            display: inline-flex;
+            max-width: 100%;
+            max-height: 100vh;
+            transition: max-width 0.36s ease, max-height 0.36s ease;
+            flex-flow: wrap;
+        }
+
+        #lrcInfo>* {
+            margin-right: 2em;
+            margin-bottom: 2em;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        #lrcInfo>* * {
+            width: fit-content;
+            white-space: nowrap;
+        }
+
+        #lrcInfo>*:last-child {
+            margin-right: 0;
+        }
+
+        #lrcInfo label {
+            width: min-content;
+            max-width: 100%;
+        }
+
+        #lrcInfo label,
+        #lrcInfo label * {
+            cursor: text;
+        }
+
+        #lrcInfo span.hide {
+            position: absolute !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            white-space: pre !important;
+            opacity: 0;
+        }
+
+
+
+
+        #lrcInfo input {
+            width: 100%;
+            height: auto;
+            opacity: 1;
+            border: 0;
+            border-bottom: solid 1px rgba(0 0 0 /40%);
+            max-width: 100%;
+            min-width: -webkit-fill-available;
+            text-overflow: ellipsis;
+            margin-top: 0.5em;
+        }
+
+
+        #lrcInfo input:focus {
+            outline: none;
+            /* background-color: var(--in-color); */
+        }
+
+
+        .container {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-content: stretch;
+        }
+
+        .container>* {
+            flex-grow: 1;
+            width: 50%;
+            margin: 0;
+            padding: 1rem;
+
+        }
+
+
+        #editor {
+            margin-top: 1em;
+        }
+
+        #editor>* {
+            overflow-x: auto;
+            overflow-y: hidden;
+            font-size: 1em;
+            line-height: 1.75em;
+        }
+
+        #in,
+        #out {
+            opacity: 0.64;
+            transition: opacity 0.36s ease;
+        }
+
+        #in:hover,
+        #out:hover {
+            opacity: 1;
+        }
+
+        #in li {
+            position: relative;
+            white-space: nowrap;
+        }
+
+        #in li>p {
+            width: fit-content;
+            padding-right: 1em;
+            display: inline-block;
+            transition: background-image 0.36s ease-in-out;
+        }
+
+        #in li::before {
+            content: attr(inpoint_text);
+            position: relative;
+            left: 0;
+            display: inline-block;
+            padding-right: 0.5em;
+        }
+
+        #in li::after {
+            content: attr(outpoint_text);
+            position: absolute;
+            right: -1em;
+            display: inline-block;
+            background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 1em, rgba(255, 255, 255, 1) 2em, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0)50%), linear-gradient(270deg, rgba(255, 255, 255, 0) 1em, rgba(255, 255, 255, 1) 2em, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0)50%);
+            padding: 0 1em;
+            transform: translate(var(--in-scroll-left), 0);
+        }
+
+
+        html.key_c #in li:hover,
+        html.key_a #in li:hover,
+        html.key_s #in li:hover,
+        html.key_c #in li:hover *,
+        html.key_a #in li:hover *,
+        html.key_s #in li:hover * {
+            cursor: pointer;
+        }
+
+        .key_c #in li:hover p,
+        .key_a #in li:hover p,
+        .key_s #in li:hover p {
+            transition: background-image 0.36s ease-in-out;
+        }
+
+        .key_c #in li:hover p {
+            background-image: linear-gradient(90deg, transparent 0%, var(--in-color) 50%);
+        }
+
+        .key_a #in li:hover p {
+            background-image: linear-gradient(270deg, transparent 0%, var(--out-color) 50%);
+        }
+
+        .key_s #in li:hover p {
+            background: var(--remove-color);
+        }
+
+        #editorbox {
+            position: relative;
+            transition: font-size 0.12s ease;
+        }
+
+        #editorbox_left label {
+            margin-right: 2em;
+        }
+
+        #editorbox #editorbox_collapser * {
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        #editorbox #editorbox_collapser h2>* {
+            max-width: 100vw;
+            overflow: hidden;
+            position: relative;
+            opacity: 0.72;
+
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+            width: fit-content;
+        }
+
+        #editorbox.collapsed,
+        #songbox.collapsed {
+            font-size: 0.6em;
+        }
+
+        #editorbox.collapsed #editorbox_collapser h2>* {
+            max-width: 0;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+
+        #editorbox #editorbox_collapser:hover h2>* {
+            opacity: 1;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+        }
+
+        #editorbox.collapsed #editorbox_collapser:hover h2>* {
+            opacity: 0;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+        }
+
+        #editorbox #editorbox_collapser *.collapsedinside {
+            max-width: 0;
+            overflow: hidden;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+
+        #editorbox.collapsed #editorbox_collapser *.collapsedinside {
+            max-width: 100vw;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+            position: relative;
+            opacity: 0.72;
+        }
+
+        #editorbox.collapsed #editorbox_collapser:hover *.collapsedinside {
+            opacity: 1;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+        }
+
+        #editorbox #editorbox_collapser:hover *.collapsedinside {
+            opacity: 0;
+            transition: max-width 0.36s ease, opacity 0.36s ease;
+        }
+
+        #editorbox_collapser {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            font-size: 0.5em;
+            padding-top: 2em;
+            cursor: pointer;
+            transition: transform 0.36s ease;
+            width: fit-content;
+        }
+
+        #editorbox_collapser h2 {
+            font-size: 1.25em;
+        }
+
+        #editorbox_collapser::before {
+            content: '';
+            display: block;
+            width: 1em;
+            height: 1em;
+            border-top: solid 1px rgba(0 0 0 /40%);
+            border-right: solid 1px rgba(0 0 0 /40%);
+            position: absolute;
+            right: 100%;
+            top: 2.5em;
+            transform: rotate(135deg);
+            transition: transform 0.36s ease;
+
+        }
+
+        #editorbox div:first-child p {
+            opacity: 1;
+
+            transform: scale(1, 1);
+            transform-origin: top center;
+            transition: transform 0.36s ease, opacity 0.36s ease, max-height 0.36s ease, max-width 0.36s ease;
+            max-width: 100vw;
+            max-height: 100vh;
+            line-height: 1.5em;
+        }
+
+        #editorbox.collapsed div:first-child p {
+            opacity: 0;
+            transform: scale(1, 0);
+            transform-origin: top center;
+            transition: transform 0.36s ease, opacity 0.36s ease, max-height 0.36s ease, max-width 0.36s ease;
+            max-width: 0;
+            max-height: 0;
+        }
+
+        #editorbox.collapsed>div {
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+        }
+
+        #editorbox.collapsed>div>* {
+            margin-left: 1em;
+        }
+
+        #editorbox.collapsed>div>*:first-child {
+            margin-left: 0em;
+        }
+
+        /* #editorbox.collapsed #lrcInfo {
+            width: min-content;
+            height: min-content;
+        } */
+
+
+
+        #editorbox.collapsed #lrcInfo * {
+            max-width: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.36s ease, box-shadow 0.36s ease, transform 0.36s ease, max-height 0.36s ease, max-width 0.36s ease;
+            margin: 0;
+        }
+
+        #editorbox #lrcInfo .lrcOutputTool,
+        #editorbox #lrcInfo .lrcOutputTool * {
+            cursor: pointer;
+        }
+
+        #editorbox.collapsed #lrcInfo .lrcOutputTool,
+        #editorbox.collapsed #lrcInfo .lrcOutputTool * {
+            max-width: none;
+            max-height: none;
+        }
+
+        #editorbox.collapsed #editorbox_collapser::before {
+            transform: rotate(45deg);
+        }
+
+        #editorbox.collapsed li.lrcOutputTool {
+            margin-right: 2em !important;
+            margin-bottom: 1em !important;
+            overflow: visible !important;
+        }
+
+        #lrcMinifyTool {
+            opacity: 0.64;
+        }
+
+        #lrcMinifyTool:hover,
+        #lrcMinifyTool.checked {
+            opacity: 1;
+        }
+
+        #lrcInfo input#lrcMinify {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hili {
+            position: relative;
+            width: fit-content;
+        }
+
+        label#lrcMinifyTool:before,
+        label::before,
+        .hili::before {
+            height: 1em;
+            width: 100%;
+            position: absolute;
+            left: 40%;
+            top: 48%;
+            transform: translate(-50%, -50%) rotate(-8deg) scale(0, 1);
+            background: var(--hili-color);
+            content: ' ';
+            mix-blend-mode: hard-light;
+            opacity: 0;
+            transition: opacity 0.24s ease, transform 0.36s ease, background 0.36s ease;
+            z-index: 99;
+        }
+
+        label#lrcMinifyTool:after,
+        label::after,
+        .hili::after {
+            height: 1em;
+            width: 100%;
+            position: absolute;
+            left: 64%;
+            top: 64%;
+            transform: translate(-50%, -50%) rotate(-12deg) scale(0, 1);
+            background: var(--hili-color);
+            content: ' ';
+            mix-blend-mode: hard-light;
+            opacity: 0;
+            transition: opacity 0.24s ease 0.12s, transform 0.36s ease 0.12s, background 0.36s ease;
+            z-index: 99;
+        }
+
+        label#lrcMinifyTool.checked:before,
+        label.clicked::before,
+        .hili:hover::before {
+            transform: translate(-50%, -50%) rotate(-8deg) scale(1);
+
+            opacity: 1;
+        }
+
+        label#lrcMinifyTool.checked:after,
+        label.clicked::after,
+        .hili:hover::after {
+            transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+            opacity: 1;
+        }
+    </style>
+    <style>
+        [data-keyboard] {
+            --padding: 0.1em;
+            --thickness: 0.24em;
+            --hili-color: hsla(240deg, 80%, 45%, 0.9);
+
+            margin: 0.1em;
+
+            padding: var(--padding) calc(var(--padding) * 2);
+            border-radius: 4px;
+            border: solid 0.5px rgba(0 0 0 /32%);
+            transform: translate(0px, calc(0px - var(--thickness) - 2px));
+            display: inline-block;
+            background: #fff;
+            box-shadow: inset 0px 1px 1px rgba(0 0 0 /12%),
+
+                0px 2px 2px 0px rgba(255 255 255 /50%),
+
+                0px var(--thickness) 0px rgba(0 0 0 /20%),
+                0px var(--thickness) 0px rgba(255 255 255 /80%),
+
+                0px calc(var(--thickness) + 1px) 0px rgba(0 0 0 /40%),
+                0px calc(var(--thickness) + 2px) 4px rgba(0 0 0 /12%),
+                0px calc(var(--thickness) + 4px) 12px rgba(0 0 0 /12%),
+
+                0px calc(var(--thickness) + 4px) 8px 4px rgba(255 255 255 /100%);
+
+            transition: transform 0.12s ease,
+                box-shadow 0.12s ease,
+                color 0.12s ease,
+                background-color 0.12s ease;
+        }
+
+        [data-keyboard]:hover {
+            text-decoration: none;
+        }
+
+        [data-keyboard].pressed {
+            color: #fff;
+            background-color: var(--hili-color);
+            transform: translate(0px, calc(0px - var(--thickness) / 2 - 2px));
+            box-shadow: inset 0px 1px 1px rgba(0 0 0 /12%),
+
+                0px 1px 1px rgba(255 255 255 /50%),
+
+                /* 0px calc(var(--thickness) / 2 + 0.5px) 0px rgba(0 0 0 /20%), */
+                0px calc(var(--thickness) / 2 + 0px) 0px var(--hili-color),
+                0px calc(var(--thickness) / 2 + 0px) 0px rgba(255 255 255 /80%),
+
+                0px calc(var(--thickness) / 2 + 1px) 0px rgba(0 0 0 /60%),
+                0px calc(var(--thickness) / 2 + 2px) 4px rgba(0 0 0 /12%),
+                0px calc(var(--thickness) / 2 + 4px) 12px rgba(0 0 0 /12%),
+                0px calc(var(--thickness) + 4px) 8px 4px rgba(255 255 255 /100%);
+        }
+
+        [data-keyboard=ctrl],
+        [data-keyboard=cmd],
+        [data-keyboard=control],
+        [data-keyboard=command] {
+            --hili-color: var(--in-key-color);
+        }
+
+        [data-keyboard=alt],
+        [data-keyboard=option],
+        [data-keyboard=opt] {
+            --hili-color: var(--out-key-color);
+        }
+
+        [data-keyboard=shift] {
+            --hili-color: var(--remove-key-color);
+        }
+    </style>
+    <script data-comment="from internet">
+        //https://www.jianshu.com/p/67b341938b2d
+        function exportRaw(data, name) {
+            let urlObject = window.URL || window.webkitURL || window;
+            let export_blob = new Blob([data]);
+            let save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+            save_link.href = urlObject.createObjectURL(export_blob);
+            save_link.download = name;
+            save_link.click();
+        }
+
+        function debounce(fn, wait) {
+            var timeout = null;
+            return function () {
+                if (timeout !== null) clearTimeout(timeout);
+                timeout = setTimeout(fn, wait);
+            }
+        }
+        // function handle() {
+        //     console.log(Math.random());
+        // }
+        // window.addEventListener('scroll', debounce(handle, 500));
+
+
+        function throttling(fn, wait, maxTimelong) {
+            var timeout = null,
+                startTime = Date.parse(new Date);
+            return function () {
+                if (timeout !== null) clearTimeout(timeout);
+                var curTime = Date.parse(new Date);
+                if (curTime - startTime >= maxTimelong) {
+                    fn();
+                    startTime = curTime;
+                } else {
+                    timeout = setTimeout(fn, wait);
+                }
+            }
+        }
+        // function handle() {
+        //     console.log(Math.random());
+        // }
+        // window.addEventListener('scroll', throttling(handle, 300, 1000));
+
+
+
+
+    </script>
+</head>
+
+<body>
+    <div id="cover">
+        <dl>
+            <dt>
+                <h1>
+                    <em class="hili">一个LRC编辑器 </em>
+                    <q class="hili">我还没找到一个用起来顺手的LRC编辑器， 所以就做了这个东西，希望你喜欢～</q>
+                    <small><b>An LRC editor</b> -- I haven't found an LRC editor that is easy to use (for me) , so I
+                        made
+                        this
+                        stuff, hope you like it~</small>
+                </h1>
+                <h2 style="--hili-color:#29abe2!important"><span style="--hili-color:#29abe2!important"
+                        class="hili">LRC</span><span style="--hili-color:#29abe2!important" class="hili">Editor</span>
+                </h2>
+            </dt>
+            <dd>
+                <p data-comment="因为还没学vue之类的">
+                    只使用了原生js，没有依赖的库；用到一些ES6以上的语法糖，请务必使用现代浏览器。<small>(譬如最新版本的 Chrome / Firefox / Safari / Edge
+                        )</small>
+                    <small> Only vanilla javascript is used, no dependent libraries; I use some ES6+ syntactic sugar in
+                        it, make sure to use a modern browser. <br>(such as the latest version of Chrome / Firefox /
+                        Safari
+                        / Edge that you can find)</small>
+                </p>
+
+                <span>
+                    Design and coding<br>
+                    by <a class="hili">Leizingyiu</a>
+                </span>
+            </dd>
+        </dl>
+
+
+        <a id="cover_collapser" class="collapser"
+            onclick="this.parentElement.classList.toggle('collapsed'); document.cookie = 'inited=true;'; ">
+            <h2 class="hili"> <span>收起标题</span><span class="collapsedinside">展开</span><small>Collapse</small><small
+                    class="collapsedinside">Expand</small></h2>
+        </a>
+    </div>
+    <div id="header">
+
+        <div id="songbox">
+            <h2 class="hili"><span>首先，加载歌曲</span><small>Step1: load song</small></h2><label><span>加载歌曲</span><small>load
+                    song</small><input type="file" name="" id="songInput"
+                    accept=".m4a,audio/m4a,audio/mp4, video/mp4, audio/mpeg, audio/ac3, audio/3gpp, video/3gpp , application/ogg, audio/ogg"></label>
+            <div id="titleAndPlayer">
+                <span id="songName" style="display: none;height: 0;"></span>
+                <audio style="flex-grow: 1;height: 2.5em;width: inherit;" controls id="song"></audio>
+            </div>
+
+        </div>
+
+        <div id="editorbox" class="container">
+            <div id="editorbox_left">
+                <h2 class="hili"><span>然后，加载歌词</span><small>Step2: load lyrics text</small></h2>
+                <label><span>加载歌词</span><small>load lyrics</small><input type="file" name="" id="lrcInput"
+                        accept="text/plain,.lrc"></label>
+                <label style="margin: 0">
+                    <span style="    white-space: nowrap;">按时间排序</span><small style="white-space: nowrap;">sort by
+                        inpoint</small>
+                    <button onclick="input_sort()"
+                        style="opacity: 0;width: 0;height: 0;margin: 0;padding: 0;border: none;"></button>
+                </label>
+
+                <p>按着 <a data-keyboard='ctrl'>ctrl</a> / <a data-keyboard='cmd'>cmd</a> 点击，添加入点； 按着 <a
+                        data-keyboard='alt'>alt</a> / <a data-keyboard='option'>option</a> 点击，添加出点； 按着 <a
+                        data-keyboard='shift'>shift</a> 点击，清除出入点； 点击鼠标中键可拖拽<br><small
+                        style="font-size:0.5em;opacity:0.8;">
+                        Press <a data-keyboard='ctrl'>ctrl</a> / <a data-keyboard='cmd'>cmd</a> and click to add an in
+                        point; Press <a data-keyboard='alt'>alt</a> / <a data-keyboard='option'>option</a> click to add
+                        out point; Press
+                        <a data-keyboard='shift'>shift</a> and click to clear the in and out points; Middle click to
+                        drag</small></p>
+            </div>
+            <div id="editorbox_right">
+                <h2 class="hili"><span>最后，填充并保存</span><small>Step3: Edit the information and save the lrc file </small>
+                </h2>
+
+
+                <ul id="lrcInfo">
+                    <li class="lrcOutputTool">
+                        <label style="margin: 0;cursor:pointer" id="lrcMinifyTool">
+                            <span style="white-space: nowrap;">使用压缩</span><small
+                                style="white-space: nowrap;">minify</small>
+                            <input type="checkbox" name="" id="lrcMinify"> </label>
+                    </li>
+                    <li class="lrcOutputTool">
+                        <label style="cursor:pointer">
+                            <span style="    white-space: nowrap;">导出LRC</span><small
+                                style="    white-space: nowrap;">export LRC</small>
+                            <button id="lrcOutput"
+                                style="opacity: 0;width: 0;height: 0;margin: 0;padding: 0;border: none;"></button>
+                        </label>
+                    </li>
+                </ul>
+
+            </div>
+            <a id="editorbox_collapser">
+                <h2 class="hili"> <span>收起说明</span><span class="collapsedinside">展开</span><small>Collapse</small><small
+                        class="collapsedinside">Expand</small></h2>
+            </a>
+        </div>
+    </div>
+    <div id="editor" class="container">
+        <pre id="in" contenteditable="true">
+使用步骤
+第一步: 加载歌曲
+第二步: 在左边加载或者粘贴歌词
+第三步: 播放歌曲，
+       按着 ctrl / cmd 点击歌词添加入点，
+       按着 alt / option 点击歌词添加出点
+       按着 shift 点击歌词清除出入点
+第四部: 在右边编辑信息，导出lrc，或者把右边的内容复制走
+
+Steps for usage
+Step 1: Load the song
+Step 2: Load or paste lyrics on the left
+Step 3: Play the song,
+        Press ctrl / cmd and click the lyrics to add the in point,
+        Press alt / option to click on the lyrics to add an out point
+        Hold shift and click on the lyrics to clear the in and out points
+Part 4: Edit information on the right, export lrc, or copy the content on the right
+    </pre>
+
+        <pre id="out" contenteditable="true">
+
+    </pre>
+    </div>
+
+
+    <script data-comment="my utils">
+
+        function keyBtn(attrName, activeClass) {
+            const agent = navigator.userAgent.toLowerCase();
+            const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
+            let keyNamedict = {
+                'Control': 'ctrl,Ctrl,',
+                'Alt': 'alt,opt,Option,option',
+                'Meta': 'cmd,command,Cmd,Command,meta,win,windows',
+                'Shift': 'shift,',
+                'CapsLock': 'cap,caps,Cap,Caps,capslock,Capslock,caps lock,Caps lock',
+                'Tab': 'tab,',
+                'Escape': 'esc,escape,',
+                'Delete': 'del,delete,',
+                'PageUp': 'pageup,page up',
+                'PageDown': 'pagedown,page down,',
+                'Home': 'home',
+                'End': 'end'
+            };
+
+            Object.keys(keyNamedict).map(k => {
+                keyNamedict[k] = keyNamedict[k].split(',').filter(Boolean);
+            });
+
+            const macIgnore = 'win,window,windows,alt'.split(',').filter(Boolean),
+                winIgnore = 'cmd,command,opt,option'.split(',').filter(Boolean);
+
+            const checkKey = (key, dom, attrName) => key == dom.innerText ||
+                (key.length > 1 && dom.innerText.toLowerCase().includes(key.toLowerCase())) ||
+                (key.length > 1 && dom.getAttribute(attrName).toLowerCase().includes(key.toLowerCase())) ||
+                (key in keyNamedict && keyNamedict[key].includes(dom.innerText)) ||
+                (key in keyNamedict && keyNamedict[key].includes(dom.getAttribute(attrName)));
+
+            const checkIgnore = (dom, attrName) => {
+                const ingore = isMac ? macIgnore : winIgnore;
+                return ingore.includes(dom.innerText.toLowerCase()) ||
+                    ingore.includes(dom.getAttribute(attrName));
+            };
+
+            document.addEventListener('keydown', function (e) {
+                var e = e || window.event;
+                [...document.querySelectorAll(`[${attrName}]`)].map(dom => {
+                    if (checkIgnore(dom, attrName)) {
+                        return
+                    }
+                    if (checkKey(e.key, dom, attrName)) {
+                        dom.classList.add(activeClass);
+                    }
+                });
+            });
+            document.addEventListener('keyup', function (e) {
+                var e = e || window.event;
+                [...document.querySelectorAll(`[${attrName}]`)].map(dom => {
+                    if (checkIgnore(dom, attrName)) {
+                        return
+                    }
+                    if (checkKey(e.key, dom, attrName)) {
+                        dom.classList.remove(activeClass);
+                    }
+                });
+            })
+
+        }
+
+        function randomHslaStyleVarColor(selector, varName, settings = {
+            h: '360+360-360',
+            s: '80+10-20',
+            l: '50+10-10',
+            a: '0.72+0.1-0.1'
+
+        }) {
+            let dSettings = {
+                h: '360+360-360',
+                s: '80+10-20',
+                l: '50+10-10',
+                a: '0.72+0.1-0.1'
+            };
+            settings = Object.assign(settings, dSettings);
+
+            // console.log(settings);
+
+            Object.keys(settings).map(k => {
+                settings[k] = { text: settings[k] };
+            });
+            // console.log(settings);
+            Object.keys(settings).map(k => {
+                let _text = settings[k].text;
+
+                _text.replace(/([\d\.]*)(\+([\d\.]*))*(-([\d\.]*))*/, function () {
+                    settings[k].mid = Number(arguments[1]);
+                    settings[k].up = Number(arguments[1]) + Number(arguments[3]);
+                    settings[k].down = Number(arguments[1]) - Number(arguments[5]);
+                });
+            });
+            let _r = Math.random, _s = settings;
+            // console.log(_s);
+            [...document.querySelectorAll(selector)].map(dom => {
+
+                let [h, s, l, a] = [
+                    _r() * (_s.h.up - _s.h.down) + _s.h.down,
+                    _r() * (_s.s.up - _s.s.down) + _s.s.down,
+                    _r() * (_s.l.up - _s.l.down) + _s.l.down,
+                    _r() * (_s.a.up - _s.a.down) + _s.a.down
+                ];
+                if (dom.style.getPropertyValue(varName) == '') {
+                    dom.style.setProperty(varName, `hsla(${h},${s}%,${l}%,${a})`);
+                }
+            })
+        }
+
+
+        function clickedDom(dom, cls, t) {
+            dom.addEventListener('mouseup', function () {
+                dom.classList.add(cls);
+                if (typeof t != 'number') { t = 1000; }
+                setTimeout(function () {
+                    dom.classList.remove(cls);
+                }, t);
+            });
+        }
+
+        function timePointToSecond(str) {
+            let m = 0,
+                s = 0,
+                ms = 0;
+            let temp = str.replace(/(\d+):(\d+)\.*(\d*)/g, function () {
+                if (str.match(/:/)) {
+                    ms = Number(arguments[3]) / Math.pow(10, arguments[3].length);
+                }
+                m = Number(arguments[1]), s = Number(arguments[2]);
+            });
+            return m * 60 + s + ms;
+        }
+
+        function midDrag(_dom) {
+            var x, y, px, py;
+
+            function moving(e) {
+
+                //http://c.biancheng.net/view/5958.html
+                if (!e) {
+                    e = window.event;
+                    e.target = e.srcElement;
+                    e.layerX = e.offsetX;
+                    e.layerY = e.offsetY;
+                }
+                e.mx = e.pageX || e.clientX + document.body.scrollLeft;
+                e.my = e.pageY || e.clientY + document.body.scrollTop;
+                //http://c.biancheng.net/view/5958.html
+
+                x = e.mx, y = e.my;
+                if (typeof px == 'undefined' || typeof py == 'undefined') {
+                    px = x, py = y;
+                }
+                let dom = this;
+                dom.scrollTo(dom.scrollLeft - (x - px), dom.scrollTop - (y - py));
+                px = x, py = y;
+            }
+
+            [...arguments].map(dom => {
+                dom.addEventListener('mousedown', function draging() {
+                    if (event.button == 1) {
+                        px = undefined, py = undefined;
+                        dom.addEventListener('mousemove', moving);
+                        dom.style.cursor = 'grabbing';
+                    }
+                });
+                dom.addEventListener('mouseup', function () {
+                    if (event.button == 1) {
+                        dom.removeEventListener('mousemove', moving);
+                        dom.style.removeProperty('cursor');
+                    }
+                });
+                dom.addEventListener('mouseenter', function () {
+                    if (event.buttons == 0) {
+                        dom.removeEventListener('mousemove', moving);
+                    }
+                });
+            });
+        }
+
+
+        function inputResizeFn(inputDom, parentDom) {
+            let i = inputDom, l = parentDom || i.parentElement;
+            return function () {
+                let hide;
+                if (!l.querySelector('span.hide')) {
+                    hide = document.createElement('span');
+                    hide.classList.add('hide');
+                    l.appendChild(hide);
+                } else {
+                    hide = l.querySelector('span.hide');
+                }
+
+                hide.textContent = i.value;
+                i.style.width = hide.offsetWidth + 2 + "px";
+                hide.parentElement.removeChild(hide);
+            }
+        }
+
+        function lrcMinify(_lrc) {
+
+            let source_lrc = _lrc;
+            let source_lrc_obj = source_lrc.split('\n');
+            source_lrc_obj = source_lrc_obj.map(a => {
+                let m = a.match(/(\[[^\]]+\])(.*)/);
+                if (m) { return [m[2], m[1]] } else { return null }
+            }).filter(Boolean);
+
+            let minify_obj = {};
+            source_lrc_obj.map(ar => {
+                let k = ar[0]; v = ar[1];
+                if (!(k in minify_obj)) {
+                    minify_obj[k] = [];
+                }
+                minify_obj[k].push(v);
+            });
+
+            let result = '';
+            Object.keys(minify_obj).map(k => {
+                result += minify_obj[k].join('') + k + '\n';
+            });
+
+            return result;
+        }
+    </script>
+    <script data-comment="LRC maker by leizingyiu.">
+        let lrc = {};
+
+        let song = document.getElementById('song');
+        let file = document.getElementById('songInput');
+        let input = document.getElementById('in');
+        let output = document.getElementById('out');
+
+
+
+
+        file.addEventListener('change', function (e) {
+            if (this.files.length) {
+                song.setAttribute('src', URL.createObjectURL(this.files[0]));
+                console.log(this.files[0]);
+                lrc.filename = this.files[0].name.replace(/\.[^.]*$/, '');
+                song.addEventListener("canplay", function () {
+                    let sn = document.getElementById('songName');
+                    sn.style.display = 'block', sn.style.height = 'auto', sn.innerText = lrc.filename;
+                });
+            }
+        });
+
+        document.getElementById('lrcOutput').onclick = function () {
+            exportRaw(lrcMinifyBoo ? lrcMinify(lrc.finalOutput()) : lrc.finalOutput(), lrc.filename + '.lrc');
+        };
+
+        document.getElementById('lrcInput').addEventListener('change', function (e) {
+            if (this.files.length) {
+                let file = this.files[0];
+                let reader = new FileReader();
+                reader.onload = function () {
+                    input.innerHTML = this.result;
+                    input_update();
+                    output_update();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('editorbox_collapser').onclick = function () {
+            document.getElementById('songbox').classList.toggle('collapsed');
+
+            document.getElementById('editorbox').classList.toggle('collapsed');
+        };
+
+        Object.defineProperty(window, 'time', {
+            get() {
+                if (song.src == '' || song.buffered.length == 0) {
+                    alert(`请加载音乐文件，以获得在歌曲当中的时间点
+Please load the music file to get the time point in the song`);
+                    return '';
+                }
+                if (song.ended == true || song.played.length == 0) {
+                    alert(`请播放文件，以获得在歌曲当中的时间点
+Please play the file to get the time point in the song`);
+                    return '';
+                }
+                let t = song.currentTime;
+                let m = Math.floor(t / 60);
+                let s = Math.floor(t % 60);
+                let ms = (t % 1).toFixed(2).replace('0.', '');
+                let double_digits = n => (String(n).length < 2 ? '0' : '') + n;
+
+                return `${double_digits(m)}:${double_digits(s)}.${ms}`;
+            }
+        });
+
+
+        Object.defineProperty(window, 'lrcMinifyBoo', {
+            get() {
+                return document.getElementById('lrcMinify').checked;
+            }
+        });
+        document.getElementById('lrcMinify').addEventListener('change', function () {
+            this.parentElement.classList.toggle('checked');
+        });
+
+        document.addEventListener('keydown', function (e) {
+            var e = e || window.event;
+            console.log(e);
+            let c = [];
+            if (e.ctrlKey || e.metaKey) {
+                c.push('key_c');
+            }
+            if (e.shiftKey) {
+                c.push('key_s');
+            }
+
+            if (e.altKey) {
+                c.push('key_a');
+            }
+            if (c.length != 0) {
+                c.map(_c => document.getElementsByTagName('html')[0].classList.add(_c))
+            }
+        });
+
+        document.addEventListener('keyup', function (e) {
+            var e = e || window.event;
+            console.log(e);
+
+            let c = [];
+            if (!(e.ctrlKey || e.metaKey)) {
+                c.push('key_c');
+            }
+            if (!e.shiftKey) {
+                c.push('key_s');
+            }
+
+            if (!e.altKey) {
+                c.push('key_a');
+            }
+            if (c.length != 0) {
+                c.map(_c => document.getElementsByTagName('html')[0].classList.remove(_c))
+            }
+        });
+        function cleanKeyClass(e) {
+            console.log(e);
+            ['key_s', 'key_a', 'key_c'].map(_c => document.getElementsByTagName('html')[0].classList.remove(_c));
+            let cleanClasses = ['pressed'];
+            cleanClasses.map(_c => {
+                [...document.querySelectorAll(`.${_c}`)].map(dom => {
+                    dom.classList.remove(_c);
+                });
+            });
+        }
+
+        window.addEventListener('blur', cleanKeyClass);
+        window.addEventListener('focus', cleanKeyClass);
+        // window.addEventListener('mouseenter', cleanKeyClass);
+        // window.addEventListener('mouseleave', cleanKeyClass);
+
+        document.getElementById('lrcMinifyTool').addEventListener('click', function () {
+            output_update();
+        });
+
+        langDict = {
+            cn: {
+                ar: '艺人',
+                ti: '标题',
+                al: '专辑',
+                by: '编辑',
+                offset: '延迟'
+            },
+            en: {
+                ar: 'artist',
+                ti: 'title',
+                al: 'album',
+                by: 'editor',
+                offset: 'offset'
+            }
+        };
+
+
+        let lrcPropFragment = document.createDocumentFragment();
+        "ar,ti,al,by,offset".split(',').map(prop => {
+            let li = document.createElement('li'),
+                label = document.createElement('label'),
+                span = document.createElement('span'),
+                small = document.createElement('small'),
+                propInput = document.createElement('input');
+            span.innerText = langDict.cn[prop], small.innerText = langDict.en[prop],
+                propInput.type = 'text', propInput.name = prop;
+            [span, small, propInput].map(dom => label.appendChild(dom));
+
+
+            let inputResize = inputResizeFn(propInput, label);
+
+            propInput.addEventListener('change', inputResize)
+            propInput.addEventListener('input', inputResize)
+
+            let callback = (mutationsList, observer) => {
+                inputResize();
+            }
+
+            let mutationObserver = new MutationObserver(callback);
+            mutationObserver.observe(propInput, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                attributeOldValue: true
+            });
+
+
+            lrcPropFragment.appendChild(li);
+            li.appendChild(label);
+
+            Object.defineProperty(lrc, prop, {
+                get() {
+                    return propInput.value;
+                },
+                set(newVal) {
+                    propInput.value = newVal;
+                }
+            })
+        });
+        document.getElementById('lrcInfo').insertBefore(lrcPropFragment, document.getElementById('lrcInfo').children[
+            0]);
+
+
+
+        lrc.output = () => {
+            let out_lrc = '';
+            let space = '';
+
+            Object.keys(lrc).map(k => {
+                let l = lrc[k];
+                if (k.match(/^\d*$/) == null || typeof l == 'function') {
+                    return;
+                }
+
+                out_lrc += (Boolean(l.inpoint) ? `[${l.inpoint}]` : '') + ` ${l.text.replace('\n', ' ')}` + '\n';
+                space += Boolean(l.outpoint) ? `[${l.outpoint}]` : '';
+            });
+
+            return out_lrc + '\n' + space + ' ';
+        };
+
+        lrc.finalOutput = () => {
+            let out_lrc = '';
+
+            "ar,ti,al,by,offset".split(',').map(prop => {
+                if (lrc[prop].length > 0) {
+                    out_lrc += `[${prop}:${lrc[prop]}] `;
+                }
+            });
+            if (out_lrc.length > 0) {
+                out_lrc += '\n';
+            }
+            out_lrc += lrc.output();
+            return out_lrc;
+        };
+
+        function input_update(_text) {
+
+            let clickedWithC = (idx) => { // 歌词点击，赋值inpoint，打时间码并更新
+                lrc[idx].inpoint = time;
+                output_update();
+            },
+                clickedWithA = (idx) => { // 赋值outpoint ，打空格时间码
+                    lrc[idx].outpoint = time;
+                    output_update();
+                },
+                clickedWithS = (idx) => { // 清除inpoint outpoint
+                    lrc[idx].inpoint = '', lrc[idx].outpoint = '';
+                    output_update();
+                };
+
+            let propReg = new RegExp('\\[(' + 'ar,ti,al,by,offset'.split(',').map(_str => `(${_str})`).join('|') +
+                '):([^\\]]*)\\]', 'g');
+
+            if (input.hasAttribute('inited') && input.querySelectorAll('li').length ==
+                0) { //检查editor内容是否为列表形式，如果不是就重新初始化
+                input.removeAttribute('inited');
+            }
+
+            if (!input.hasAttribute('inited')) { //如果没有初始化，内容就是普通文本；
+                let fragment = document.createDocumentFragment();
+
+                if (typeof _text == 'undefined') {
+                    _text = input.innerText;
+                }
+                _text.split('\n').map((t, idx) => { // 文本按回车分行，一行为一句歌词，作为一个基本操作对象
+
+                    if (t.match(propReg)) {
+                        t.replace(propReg, function () {
+                            console.log(arguments);
+                            let _prop = arguments[1],
+                                _val = arguments[7];
+                            console.log(_prop, _val);
+                            lrc[_prop] = _val;
+
+                            inputResizeFn(document.querySelector(`input[name=${_prop}]`))();
+                        });
+                        return;
+                    };
+
+                    let timepointReg = /\[\d{2}:\d{2}(\.\d{2})*\]/g;
+                    let inpointGroup = t.match(timepointReg);
+
+                    if (inpointGroup == null) {
+                        inpointGroup = [''];
+                    } else {
+                        inpointGroup = inpointGroup.map(__inpoint => __inpoint.replace(/[\[\]]/g, ''));
+                    }
+
+                    inpointGroup.map(__inpoint => {
+
+
+
+                        //将文本初始化为界面dom结构
+                        let li = document.createElement('li');
+                        let p = document.createElement('p');
+                        // let i = document.createElement('i');
+                        // i.contentEditable = false;
+
+
+                        p.oncopy = function () {
+                            let text = this.innerText;
+
+                            navigator.clipboard.writeText(text)
+                                .then(() => {
+                                    console.log('Text copied to clipboard: ' + text);
+                                })
+                                .catch(err => {
+                                    console.error('Error in copying text: ', err);
+                                });
+                        };
+
+
+                        li.setAttribute('inpoint', __inpoint);
+                        li.setAttribute('inpoint_text', __inpoint ? `[${__inpoint}]` : '');
+
+                        li.setAttribute('outpoint', '');
+                        li.setAttribute('idx', idx);
+
+
+
+
+                        p.innerText = t.length == 0 ? `  ` : t.replace(timepointReg, '');
+                        li.setAttribute('text', p.innerText);
+
+                        fragment.appendChild(li);
+                        li.appendChild(p);
+                        // li.appendChild(i);
+
+
+                        //初始化单句歌词对象
+
+                        lrc[idx] = {
+                            text: '',
+                            inpoint: __inpoint,
+                            outpoint: ''
+                        };
+
+                        lrc[idx].inpoint = __inpoint;
+
+                        //绑定界面点击事件
+                        li.onclick = function (e) {
+                            var e = e || window.event;
+                            if (e.ctrlKey || e.metaKey) {
+                                clickedWithC(idx);
+                            }
+                            if (e.altKey) {
+                                clickedWithA(idx);
+                            }
+                            if (e.shiftKey) {
+                                clickedWithS(idx);
+                            }
+                        };
+
+                    });
+
+                });
+                // let liList = fragment.querySelectorAll('li');
+                // let fragmentAfterSort = document.createDocumentFragment();
+                // liList = [...liList].sort((a, b) => {
+                //     console.log(a, b);
+                //     [A, B] = [a, b].map(i => i.getAttribute('inpoint').split(':').map((ip, idx) => idx == 0 ? Number(ip) * 60 : Number(ip)));
+                //     console.log(A, B);
+                //     return (A[0] + A[1]) - (B[0] + B[1]);
+                // }).map(l => {
+                //     fragmentAfterSort.appendChild(l);
+                // });
+
+                // console.log(liList, fragmentAfterSort   );
+                // console.log(fragment, lrc);
+                // debugger;
+
+                //写入editor的界面
+                input.innerHTML = '';
+                input.appendChild(fragment);
+
+                input.setAttribute('inited', 'true'); //标注已初始化
+
+            } else { //已初始化的编辑器
+                [...input.querySelectorAll('li')].filter(li => !li.querySelector('p')).map(
+                    li => { //如果编辑时，将内容删除，且将p标签删除，则移除行
+                        li.parentElement.removeChild(li);
+                    });
+
+                [...input.querySelectorAll('li')] //如果行内部存在回车，则将回车拆分成若干行，并插入到原来的位置
+                    .filter(li => li.querySelector('p') &&
+                        li.querySelector('p').innerText.split('\n').some(line => line.length > 1) ||
+                        li.querySelector('p').innerText.split('\n').length > 2)
+                    .map(li => {
+                        let fragment = document.createDocumentFragment();
+                        li.querySelector('p').innerText.split('\n').map((t, dx) => {
+                            if (dx == 0) {
+                                return
+                            }
+                            let l = document.createElement('li');
+                            let p = document.createElement('p');
+
+                            p.oncopy = function () {
+                                let text = this.innerText;
+
+                                navigator.clipboard.writeText(text)
+                                    .then(() => {
+                                        console.log('Text copied to clipboard: ' + text);
+                                    })
+                                    .catch(err => {
+                                        console.error('Error in copying text: ', err);
+                                    });
+                            };
+
+                            l.setAttribute('inpoint', '');
+                            l.setAttribute('inpoint_text', '');
+
+                            l.setAttribute('outpoint', '');
+                            p.innerText = t.length == 0 ? `    ` : t;
+                            l.setAttribute('text', p.innerText);
+
+                            fragment.appendChild(l);
+                            l.appendChild(p);
+                        });
+                        li.after(fragment);
+                    });
+
+                // [...input.querySelectorAll('li')].map((li, idx) => {
+                //     li.setAttribute('idx', idx); //刷新全部行的序号
+
+
+
+                //     let p = li.querySelector('p'); 
+
+                //     //重新绑定界面事件，将界面与数据一一对应
+                //     li.onclick = function (e) {
+                //         var e = e || window.event;
+                //         if (e.ctrlKey || e.metaKey) {
+                //             clickedWithC(idx);
+                //         }
+                //         if (e.altKey) {
+                //             clickedWithA(idx);
+                //         }
+                //         if (e.shiftKey) {
+                //             clickedWithS(idx);
+                //         }
+                //     };
+
+                // });
+
+                input.setAttribute('inited', 'true');
+            };
+
+            [...input.querySelectorAll('li')].map((li, idx) => {
+
+                //将所有行，一一对应到lrc对象中，lrc对象的属性直接读取行的属性
+
+                li.setAttribute('idx', idx); //刷新全部行的序号
+
+                let p = li.querySelector('p');
+
+                //重新绑定界面事件，将界面与数据一一对应
+                li.onclick = function (e) {
+                    var e = e || window.event;
+                    if (e.ctrlKey || e.metaKey) {
+                        clickedWithC(idx);
+                    }
+                    if (e.altKey) {
+                        clickedWithA(idx);
+                    }
+                    if (e.shiftKey) {
+                        clickedWithS(idx);
+                    }
+                };
+
+                if (li.innerText != p.innerText) {
+                    let temp = li.innerText;
+                    li.innerText = '';
+                    p = document.createElement('p');
+                    li.appendChild(p);
+                    p.innerText = temp.replace(/[\n\r]/g, ' ');
+                }
+                if (typeof lrc[idx] == 'undefined') {
+                    lrc[idx] = {
+                        text: '',
+                        inpoint: '',
+                        outpoint: ''
+                    };
+                };
+
+                ['inpoint', 'outpoint'].map(prop => {
+
+                    Object.defineProperty(lrc[idx], prop, {
+
+                        enumerable: true,
+                        get() {
+                            return li.getAttribute(prop);
+                        },
+                        set(newVal) {
+                            li.setAttribute(prop, newVal);
+                            li.setAttribute(prop + '_text', '\[' + newVal + '\] ');
+                        }
+                    });
+                });
+                Object.defineProperty(lrc[idx], 'text', {
+                    enumerable: true,
+                    get() {
+                        return p.innerText;
+                    },
+                    set(newVal) {
+                        p.innerText = newVal;
+                    }
+                });
+
+                if ((li.hasAttribute('text') && li.getAttribute('text') != p.innerText) || (!li.hasAttribute(
+                    'text')) || (li.style.getPropertyValue('--extra-w') == '')) {
+
+                    let liW = li.clientWidth,
+                        pW = p.clientWidth; //, iW = li.querySelector('i').clientWidth;
+                    let extraw = pW > liW ? (pW - liW) / liW : 0;
+                    p.style.setProperty('--extra-w', extraw);
+                    li.setAttribute('text', p.innerText);
+                }
+            });
+
+        };
+
+        function output_update() {
+            output.innerText = lrcMinifyBoo ? lrcMinify(lrc.output()) : lrc.output();
+        };
+
+        function output_minify() {
+            output.innerText = lrcMinify(lrc.output());
+        }
+
+        let input_sort = _ => {
+            let fragment = document.createDocumentFragment();
+            [...input.querySelectorAll('li')]
+                .sort((a, b) => {
+                    let ap = a.getAttribute('inpoint'),
+                        bp = b.getAttribute('inpoint');
+                    let at = 1,
+                        bt = 0;
+                    at = timePointToSecond(ap), bt = timePointToSecond(bp);
+
+                    return at - bt;
+                })
+                .map(li => {
+                    let l = li.cloneNode(true);
+                    fragment.appendChild(l);
+                });
+            // console.log(fragment, fragment.innerHTML, fragment.outerHTML);
+            input.innerHTML = '';
+            input.appendChild(fragment);
+
+            input_update();
+            output_update();
+        }
+        let domEditedEvent = (dom, callback) => {
+            let beforeHtml = dom.innerHTML;
+
+            dom.addEventListener('focus', _ => {
+                beforeHtml = dom.innerHTML;
+            });
+
+            dom.addEventListener('blur', function () {
+                if (dom.innerHTML !== beforeHtml) {
+                    callback();
+                }
+
+            });
+        };
+
+        domEditedEvent(input, function () {
+            console.log('input dom edited');
+
+            input_update();
+            output_update();
+            console.log(lrc.output());
+        });
+
+        domEditedEvent(output, function () {
+            console.log(lrc.output());
+        });
+
+        input_update();
+        output_update();
+
+        [input, output].map(dom => {
+            dom.addEventListener('scroll', function scrollTogether(e) {
+                var e = e || window.event;
+                [input, output].filter(d => d != this).map(d => {
+                    d.removeEventListener('scroll', scrollTogether);
+                    d.scrollTo(this.scrollLeft, this.scrollTop);
+                    d.addEventListener('scroll', scrollTogether);
+                });
+            });
+        });
+        midDrag(input, output, document.getElementsByTagName('html')[0]);
+
+        input.addEventListener('scroll', function (e) {
+            this.style.setProperty('--in-scroll-left', this.scrollLeft + 'px');
+        });
+
+
+        [...document.querySelectorAll('label')].map(label => {
+            clickedDom(label, 'clicked', 1000);
+        });
+
+        randomHslaStyleVarColor('label', '--hili-color', {
+            h: '360+360-360',
+            s: '80+10-20',
+            l: '50+10-10',
+            a: '0.72+0.1-0.1'
+        });
+
+        randomHslaStyleVarColor('.hili', '--hili-color', {
+            h: '360+360-360',
+            s: '80+10-30',
+            l: '50+20-20',
+            a: '0.90+0.1-0.1'
+        });
+
+        keyBtn('data-keyboard', 'pressed');
+
+        window.addEventListener('scroll', function (e) {
+            var e = e || window.event;
+            if (document.getElementById('header').offsetTop > document.getElementById('cover').clientHeight * 1.1 &&
+                !document.querySelector('#cover_collapser').parentElement.classList.contains('collapsed') &&
+                !document.querySelector('#cover_collapser').classList.contains('inited')) {
+                document.querySelector('#cover_collapser').click();
+                document.querySelector('#cover_collapser').classList.add('inited');
+                document.cookie = 'inited=true;';
+            }
+        });
+
+        if (document.cookie.indexOf('inited=true') != -1) {
+            setTimeout(function () {
+                document.querySelector('#cover').classList.add('collapsed');
+            }, 800);
+            setTimeout(function () {
+                document.querySelector('#songbox').classList.add('collapsed');
+            }, 900);
+            setTimeout(function () {
+                document.querySelector('#editorbox').classList.add('collapsed');
+            }, 1000);
+        }
+
+        setTimeout(function () {
+            document.querySelector('#cover').classList.add('collapsed');
+        }, 5000);
+
+    </script>
+
+</body>
+
+</html>

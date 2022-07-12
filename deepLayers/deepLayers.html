@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="https://www.leizingyiu.net/animated_favicon.gif" type="image/gif">
+
+
+    <title>Layers to Deep - by Leizingyiu</title>
+    <!-- <link rel="stylesheet" href="./css/initStyle.css"> -->
+    <style id="initStyle">
+        /* 雅虎工程师提供的CSS初始化示例代码 */
+        body,
+        div,
+        dl,
+        dt,
+        dd,
+        ul,
+        ol,
+        li,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        pre,
+        code,
+        form,
+        fieldset,
+        legend,
+        input,
+        button,
+        textarea,
+        p,
+        blockquote,
+        th,
+        td {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #fff;
+            color: #555;
+            font-size: 12px;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+        }
+
+        td,
+        th,
+        caption {
+            font-size: 14px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: normal;
+            font-size: 100%;
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        strong,
+        th,
+        var {
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            border: none;
+        }
+
+        ol,
+        ul,
+        li {
+            list-style: none;
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            font: 12px Verdana, Helvetica, Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        html {
+            overflow-y: scroll;
+        }
+
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .clearfix {
+            *zoom: 1;
+        }
+    </style>
+    <style id="interfaceStyle">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        input[type='file'],
+        input[type='checkbox'],
+        button,
+        label {
+            cursor: pointer !important;
+            user-select: none !important;
+        }
+
+        html {
+            --border-radius: 4px;
+            font-size: 3vmin !important;
+        }
+
+        body {
+            font-size: inherit !important;
+        }
+
+        input,
+        button {
+            font-size: inherit !important;
+        }
+
+        html::before,
+        html::after {
+            display: block;
+            min-height: 60vh;
+            letter-spacing: 0.05em;
+            white-space: pre-wrap;
+
+            opacity: 0.32;
+            z-index: -999;
+
+            top: 50%;
+            transform: translate(0%, -50%);
+        }
+
+        html::before {
+            content: 'Deep Layers Generator \A 视差快速生成器';
+            position: fixed;
+            left: 10vw;
+            right: 52vw;
+            font-size: 1.6rem;
+            margin-top: -0.2em;
+        }
+
+        html::after {
+            content: '在左上角加载图片，然后调整scale(缩放)、dist(距离)，就可以得到视差效果，右下角手柄可以模拟手机旋转； \A\A 最后可以打包下载，并且可以嵌入图片，直接将整个html文件粘贴到codepen之类的在线网站进行分享\A\ALoad the image in the upper left corner, and then adjust the scale (zoom) and dist (distance) to get the parallax effect. The handle in the lower right corner can simulate the rotation of the mobile phone; \A\A Finally, it can be packaged and downloaded, and the image can be embedded, and the entire html can be directly Paste the file to an online site like codepen to share \A\A deepLayers by Leizingyiu';
+            position: fixed;
+            left: 52vw;
+            right: 10vw;
+            font-size: max(12px, 0.48rem);
+        }
+
+
+
+        @media screen and (orientation: portrait) {
+
+            html::before,
+            html::after {
+                left: 50%;
+                transform: translate(-50%, 0);
+                right: unset;
+                top: unset;
+                bottom: unset;
+                width: 80vmin;
+            }
+
+            html::before {
+                top: 20vmin;
+                bottom: 52vmin;
+            }
+
+            html::after {
+                top: 52vmin;
+                bottom: 20vmin;
+            }
+        }
+
+        #ctrlers {
+            display: flex;
+            flex-direction: column-reverse;
+            user-select: none;
+            font-size: 0.5rem;
+            width: fit-content;
+            margin: 0.5em;
+        }
+
+        #ctrlers input {
+            user-select: text;
+        }
+
+        #ctrlers>li {
+            margin: 1em;
+            /* padding: 0.5em; */
+            width: fit-content;
+            background-color: rgba(255, 255, 255, 0.80);
+            border-radius: var(--border-radius);
+            line-height: 2em;
+
+            box-shadow: 0 0 0 0.1em rgb(255 255 255),
+                0 0 0.5em 0em rgb(0 0 0 / 16%),
+                0 0 2em 0em rgb(0 0 0 / 12%);
+
+            position: relative;
+
+            padding: 0.5em 0.5em 0.5em 5.5em;
+
+            backdrop-filter: blur(2px);
+        }
+
+        #ctrlers>li::before {
+            content: attr(name);
+            display: block;
+            margin-bottom: 0.5em;
+
+            /* position: absolute;
+            top: 0;
+            left: 4em; */
+        }
+
+        #ctrlers>li::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 1em;
+            left: 1em;
+            width: 3.5em;
+            height: 3.5em;
+
+            background-image: var(--img);
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+        }
+
+        #ctrlers>li#fileCtrler {
+            padding: 0.5em;
+        }
+
+        #ctrlers>li#fileCtrler::after {
+            content: none;
+        }
+
+        #ctrlers>li#fileCtrler::before {
+            margin-bottom: 0em;
+        }
+
+        #ctrlers>li label {
+            margin-right: 1.5em;
+        }
+
+        #ctrlers>li label input {
+            margin-left: 0.5em;
+            padding-right: 2em;
+            vertical-align: middle;
+        }
+
+        #ctrlers>li button {
+            margin-right: 0.5em;
+            padding: 0 0.5em;
+        }
+
+        /* #fileDownload {
+            padding: 0 0.5em;
+            margin: 0.5em 0;
+        } */
+
+        #orientator {
+            position: fixed;
+            width: 10vmin;
+            height: 10vmin;
+            right: 5vmin;
+            bottom: 5vmin;
+            background-color: #666;
+            border-radius: var(--border-radius);
+        }
+
+        #orientator::before,
+        #orientator::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: dashed 1px #333;
+            z-index: 1;
+        }
+
+        #orientator::before {
+            width: 99%;
+            height: 0px;
+        }
+
+        #orientator::after {
+            width: 0px;
+            height: 99%;
+        }
+
+        #orientator div {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            width: 2vmin;
+            height: 2vmin;
+            background-color: #fff;
+            border: solid 0.25em #333;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            border-radius: calc(var(--border-radius) / 2);
+            z-index: 99;
+        }
+    </style>
+
+    <style id="layersStyle">
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+
+        }
+
+        html {
+            --global-x: 0;
+            --global-y: 0;
+        }
+
+        #layers {
+            user-select: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            z-index: -1;
+            --scale: 1;
+            --movex: 0;
+            --movey: 0;
+
+        }
+
+        #layers>li {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            --dist: 0;
+        }
+
+        #layers>li * {
+            /* transform: translate(var(--movex), var(--movey)) scale(var(--scale)); */
+            transform: translate(calc(var(--global-x) * var(--dist) * 1px), calc(var(--global-y) * var(--dist) * 1px)) scale(var(--scale));
+        }
+    </style>
+</head>
+
+<body>
+
+    <ol id="ctrlers">
+        <li id="fileCtrler"> <label>加载图片 ｜ load images | <input type="file" name="" id="filesInput" multiple="multiple">
+            </label><br>
+            <label>嵌入图片 ｜ Embed pictures <input type="checkbox" id="embedImage"> </label><br>
+            <label>完成后在此保存 ｜ Save here when done ｜ <button id="fileDownload">打包下载 /
+                    download</button></label>
+        </li>
+    </ol>
+    <ul id="layers"></ul>
+
+    <div id="orientator">
+        <div draggable=""></div>
+    </div>
+
+    <style id="imageDataContainer"></style>
+
+    <script data-comment="draging element">
+        //*https://c.runoob.com/codedemo/5370*//
+
+        function dragElement(elmnt, callback = () => { }) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+                /* if present, the header is where you move the DIV from:*/
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+
+                let x = (elmnt.offsetLeft - pos1), y = (elmnt.offsetTop - pos2);
+                let parent = e.target.parentElement, pw = x, ph = y;
+                if (parent && (!elmnt.hasAttribute('pwidth'))) {
+                    elmnt.setAttribute('pwidth', parent.clientWidth), elmnt.setAttribute('pheight', parent.clientHeight);
+                }
+                if (elmnt.hasAttribute('pwidth')) {
+                    pw = elmnt.getAttribute('pwidth'), ph = elmnt.getAttribute('pheight');
+                }
+
+                x = Math.min(Math.max(x, 0), pw);
+                y = Math.min(Math.max(y, 0), ph);
+
+                elmnt.style.top = `${y}px`;
+                elmnt.style.left = `${x}px`;
+
+                callback(elmnt);
+            }
+
+            function closeDragElement() {
+                /* stop moving when mouse button is released:*/
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        };
+        dragElement(document.querySelector('#orientator div'), function (elm) {
+
+            let parent = elm.parentElement;
+            if (parent) {
+                let _pw = String(parent.clientWidth).replace(/px/g, '') + 0, _ph = String(parent.clientHeight).replace(/px/g, '') + 0,
+                    x = String(elm.style.left).replace(/px/g, '') + 0, y = String(elm.style.top).replace(/px/g, '') + 0;
+
+                let e = {};
+                e.alpha = 0,
+                    e.beta = y / _ph * 180 - 90,
+                    e.gamma = x / _pw * 180;
+
+                orientationHandler(e);
+            }
+        });
+
+    </script>
+
+    <script data-comment="<input> resize">
+        function inputResizeFn(inputDom, parentDom) {
+            let i = inputDom, l = parentDom || i.parentElement;
+            return function () {
+                let hide;
+                if (!l.querySelector('span.hide')) {
+                    hide = document.createElement('span');
+                    hide.classList.add('hide');
+                    l.appendChild(hide);
+                } else {
+                    hide = l.querySelector('span.hide');
+                }
+
+                hide.textContent = i.value;
+                i.style.width = hide.offsetWidth + 2 + "px";
+                hide.parentElement.removeChild(hide);
+            }
+        }
+    </script>
+
+    <script data-comment="interface and program">
+        files = {}, ctrlers = {};
+        document.getElementById('filesInput').addEventListener('change', function (e) {
+            var e = e || window.event;
+            let layersFrag = document.createDocumentFragment(),
+                ctrlersFrag = document.createDocumentFragment();
+
+
+
+            for (let i = 0, n = this.files.length; i < n; i++) {
+                let file = this.files[i];
+
+                let fileName = file.name;
+                // if (Object.keys(files) && Object.keys(files).includes(fileName)) {
+                //     fileName = '_' + file.name;
+                // }
+                while (Object.keys(files) && Object.keys(files).includes(fileName)) {
+                    fileName = Object.keys(files).filter(k => k.indexOf(fileName) != -1).length + '_' + fileName;
+                }
+
+
+
+                let size = file.size / 1024 / 1024, maxSize = 15;
+                if (size > maxSize) {
+                    alert(`文件 "${file.name}" 大小为${size.toFixed(2)}MB，请选择小于 ${maxSize}MB 的文件。
+
+The size of the file  "${file.name}"  is ${size.toFixed(2)}MB, please select a file smaller than ${maxSize}MB.`)
+                    continue;
+                }
+
+
+                files[fileName] = {};
+                // files.push(file);
+                let filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function (e) {
+                    files[fileName].name = file.name;
+                    files[fileName].content = this.result;
+                }
+
+
+                let html = document.querySelector('html');
+                if (!html.hasAttribute('loading_images')) {
+                    html.setAttribute('loading_images', 0);
+                }
+                html.setAttribute('loading_images', Number(html.getAttribute('loading_images')) + 1);
+                html.classList.add('loading_images');
+
+
+                let reader = new FileReader();
+
+                reader.readAsDataURL(file);
+                reader.onload = function (e) {
+
+                    let html = document.querySelector('html');
+
+                    if (html.hasAttribute('loading_images')) {
+                        html.setAttribute('loading_images', Number(html.getAttribute('loading_images')) - 1);
+                    }
+                    if ((html.hasAttribute('loading_images')) && Number(html.getAttribute('loading_images')) == 0) {
+                        html.classList.remove('loading_images');
+                    }
+
+                    var urlData = this.result;
+
+                    let layer_li = document.createElement('li');
+                    let ctrl_li = document.createElement('li');
+                    document.getElementById('layers').insertBefore(layer_li, document.getElementById('layers').children[0]);
+                    document.getElementById('ctrlers').insertBefore(ctrl_li, document.getElementById('ctrlers').children[0]);
+
+
+                    layer_li.setAttribute('name', fileName);
+                    let layer_object = document.createElement('object');
+                    layer_object.setAttribute('data', urlData);
+                    layer_object.setAttribute('name', fileName);
+                    layer_object.setAttribute('filename', file.name);
+                    layer_li.appendChild(layer_object);
+
+                    ctrlers[fileName] = {};
+
+                    ctrl_li.setAttribute('name', fileName);
+                    ctrl_li.style.setProperty('--img', `var(--${fileName.replace(/\./g, '-')})`);
+                    document.querySelector('#imageDataContainer').innerHTML += `
+                    li{
+                        --${fileName.replace(/\./g, '-')}:url("${urlData}");
+                    }`;
+
+
+                    let ctrlersObjs = [{ class: 'scale', precision: 0.01, default: 1 },
+                    { class: 'dist', precision: 1, default: 100 },
+                    ];
+                    ctrlersObjs.map(ctrlerObj => {
+
+                        let property = ctrlerObj.class;
+
+                        let label = document.createElement('label');
+                        label.innerText = property;
+                        let input = document.createElement('input');
+                        input.name = fileName;
+                        let v = property == 'dist' ? (document.getElementById('layers').childElementCount) * 100 : (property == 'scale' ? 1 : 0);
+                        input.value = v;
+                        input.classList.add(property);
+
+                        input.addEventListener('input', function (e) {
+                            ctrlers[fileName][property] = this.value;
+                        });
+                        label.appendChild(input);
+                        ctrl_li.appendChild(label);
+
+                        let inputResize = inputResizeFn(input, label);
+
+                        ['change', 'blur', 'focus'].map(ev => {
+                            input.addEventListener(ev, function () {
+                                let v = Number(Number(this.value).toFixed(String(ctrlerObj.precision).replace(/(?:.)(\d*)/g, '$1').length));
+                                console.log(this.value, v, typeof (v) === "number", isFinite(v), isNaN(v));
+                                switch (true) {
+                                    case typeof (v) === "number" && isNaN(v):
+                                        this.value = '无法转化成数字，请输入数字 ｜ Please key in numbers'
+                                        break;
+                                    case typeof (v) === "number" && (!isFinite(v)):
+                                        this.value = '无法转化成有效数字，请输入数字 ｜ Please key in numbers'
+                                        break;
+                                    case typeof (v) === 'number':
+                                        this.value = v;
+                                        break;
+                                    default:
+                                        this.value = '请输入数字 ｜ Please key in numbers'
+                                };
+                                inputResize();
+                            });
+                        });
+
+                        ['change', 'input', 'keydown', 'keyup', 'blur', 'focus'].map(ev => {
+                            input.addEventListener(ev, function () {
+                                inputResize();
+                            });
+                        });
+
+                        ['focus'].map(ev => {
+                            input.addEventListener(ev, function () {
+                                let v = Number(this.value);
+                                if (typeof (v) !== 'number' || (!isFinite(v))) { this.value = ctrlerObj.default; }
+                                inputResize();
+
+                            });
+                        });
+
+                        input.addEventListener('keydown', function (e) {
+
+                            let k = 1;
+                            if (e.shiftKey == true) { k = 10; }
+
+                            if (e.key == 'ArrowDown') { k = k * (-1); }
+
+                            switch (true) {
+                                case e.key == 'ArrowUp':
+                                case e.key == 'ArrowDown':
+                                    this.value = (Number(this.value) + Number(k * ctrlerObj.precision));
+                                    this.value = Number(this.value).toFixed(String(ctrlerObj.precision).replace(/(?:.)(\d*)/g, '$1').length);
+                                    break;
+                            }
+
+                            ctrlers[fileName][property] = this.value;
+
+                            inputResize();
+                        });
+
+                        inputResize();
+
+                        Object.defineProperty(ctrlers[fileName],
+                            property,
+                            {
+                                get: () => {
+                                    return document.querySelector(`input[name="${fileName}"].${property}`).value;
+                                },
+                                set: (newVal) => {
+
+                                    document.querySelector(`object[name="${fileName}"]`).style.setProperty(`--${property}`, newVal);
+                                    document.querySelector(`object[name="${fileName}"]`).setAttribute(property, newVal);
+                                }
+                            }
+                        );
+
+                        layer_object.style.setProperty(`--${property}`, v);
+                        layer_object.setAttribute(property, v);
+
+                    });
+                    // ctrlersFrag.appendChild(l);
+
+
+                    [1, -1].map(_i => {
+
+                        let btn = document.createElement('button');
+
+                        btn.innerText = _i == 1 ? '⤴' : '⤵';
+                        btn.setAttribute('name', fileName);
+                        ctrl_li.appendChild(btn);
+
+                        btn.onclick = function () {
+
+
+                            [...document.querySelectorAll('#layers>li')].map((dom, idx) => {
+                                dom.setAttribute('index', idx);
+                                document.querySelector(`#ctrlers li[name="${dom.getAttribute('name')}"]`).setAttribute('index', idx);
+                            });
+
+                            name = this.getAttribute('name');
+                            let idx = Number(document.querySelector(`#ctrlers li[name="${name}"]`).getAttribute('index'));
+
+                            console.log(idx, '+', _i, ' target:', idx + _i, name);
+
+                            if (document.querySelector(`#layers [index="${idx + _i}"]`))
+                                ['#ctrlers', '#layers'].map(id => {
+                                    if (_i == -1) {
+                                        document.querySelector(id + ` [index="${idx + _i}"]`).before(document.querySelector(id + ` li[name="${name}"]`))
+                                    } else {
+                                        document.querySelector(id + ` [index="${idx + _i}"]`).after(document.querySelector(id + ` li[name="${name}"]`))
+
+                                    }
+                                });
+
+                            document.getElementById('ctrlers').appendChild(document.getElementById('fileCtrler'));
+                        };
+                    });
+
+                    let removeBtn = document.createElement('button');
+                    removeBtn.innerText = 'X';
+                    removeBtn.setAttribute('name', fileName);
+                    ctrl_li.appendChild(removeBtn);
+
+                    removeBtn.onclick = function () {
+                        let name = this.getAttribute('name');
+                        ['#ctrlers', '#layers'].map(id => {
+                            let dom = document.querySelector(id + ` li[name="${name}"]`);
+                            dom.parentElement.removeChild(dom);
+
+                            delete files[name];
+                        });
+                    };
+
+                    setTimeout(function () {
+                        [...document.querySelectorAll('#layers li')].map(li => {
+                            if (li.clientWidth == 0) {
+                                li.querySelector('object').style.width = '10vmin';
+                            }
+                        });
+                    }, 50);
+
+                };
+
+            };
+
+            let that = this;
+            setTimeout(() => {
+                that.value = '';
+            }, 500);
+        });
+
+
+    </script>
+
+    <script type="text/javascript" id="deepLayers" data-comment="deep layers generator">
+
+        // from https://uiiiuiii.com/other/121291164.html  by leizingyiu
+        // view more: leizingyiu.net
+
+        var rotaA = 0, rotaB = 0, rotaG = 0,
+            rotaA0 = 0, rotaB0 = 0, rotaG0 = 0,
+            nowA = 0, nowB = 0, nowG = 0;
+        var makeInitial = false;
+
+        window.addEventListener("deviceorientation", orientationHandler, false);
+
+        function orientationHandler(e) {
+            /*UIIIUIII*/
+            if (makeInitial === false) {
+                rotaA0 = e.alpha > 180 ? e.alpha - 180 : e.alpha;
+                rotaB0 = e.beta;
+                rotaG0 = e.gamma;
+                makeInitial = true
+            }
+
+            rotaA = (e.alpha > 180 ? e.alpha - 180 : e.alpha) - rotaA0;
+            rotaB = e.beta - rotaB0 + 90;
+            rotaG = e.gamma - rotaG0;
+
+            nowA = rotaA / 360;
+            nowB = rotaB < -90 && rotaB > -180 ? (rotaB + 270) / 360 : (rotaB - 90) / 360;
+            nowG = rotaG / 360;
+
+            document.querySelector('html').style.setProperty('--global-x', nowG);
+            document.querySelector('html').style.setProperty('--global-y', nowB);
+
+            // if (document.querySelector('*[dist]') && document.querySelector('*[dist]').getAttribute('dist')) {
+            //     [...document.querySelectorAll('*[dist]')].map(dom => {
+            //         let _dist = dom.getAttribute('dist');
+            //         let moveX = (nowG * _dist),
+            //             moveY = (nowB * _dist);
+
+            //         dom.style.setProperty('--movex', moveX + 'vw'),
+            //             dom.style.setProperty('--movey', moveY + 'vh');
+            //     })
+            // }
+
+
+        } /*by leizingyiu*/
+    </script>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+    <script data-comment="download">
+        // // 引入js文件
+        // import '@/libs/jszip'
+        // // arr是多个文件的数组
+
+        document.getElementById('fileDownload').onclick = function () {
+
+            let zip = new JSZip();
+            let html = document.createElement('html'), head = document.createElement('head'), body = document.createElement('body');
+            let meta = document.createElement('meta');
+            meta.setAttribute('charset', "UTF-8")
+            head.appendChild(meta);
+            head.appendChild(document.getElementById('layersStyle').cloneNode(true));
+            head.appendChild(document.getElementById('initStyle').cloneNode(true));
+            head.appendChild(document.getElementById('deepLayers').cloneNode(true));
+            body.appendChild(document.getElementById('layers').cloneNode(true));
+            html.appendChild(head);
+            html.appendChild(body);
+            if (document.querySelector('#embedImage').checked == false) {
+                [...html.querySelectorAll('object')].map(obj => {
+                    obj.data = `.\/${obj.getAttribute('filename')}`;
+                });
+                Object.keys(files).map(k => {
+                    let file = files[k];
+                    console.log(file);
+                    zip.file(file.name, file.content);
+                });
+            }
+            zip.file('index.html', html.outerHTML);
+
+
+            zip.generateAsync({
+                type: 'blob'
+            }).then(function (content) {
+                var filename = 'deepLayers' + '.zip';
+                var el = document.createElement('a');
+                el.download = filename;
+                el.style.display = 'none';
+                el.href = URL.createObjectURL(content);
+                document.body.appendChild(el);
+                el.click();
+                document.body.removeChild(el);
+            });
+
+        };
+
+    </script>
+
+
+</body>
+
+</html>
