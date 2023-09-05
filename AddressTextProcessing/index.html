@@ -1,37 +1,48 @@
-<h1>在线地址智能解释 by <a href="https://www.leizingyiu.net">Leizingyiu</a></h1>
-<p><small>fork from <a
-            href="https://codepen.io/wzc570738205/pen/RwrjLbq">https://codepen.io/wzc570738205/pen/RwrjLbq</a><br>
-        script from <a
-            href="http://wzhichao.gitee.io/smartparse/#/smartParse/import/es5">http://wzhichao.gitee.io/smartparse/#/smartParse/import/es5</a>
-    </small></p>
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- <script src="http://wzhichao.gitee.io/smartParsePro/js/pcasCode.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线地址智能解释 by Leizingyiu</title>
+</head>
+
+<body>
+
+    <h1>在线地址智能解释 by <a href="https://www.leizingyiu.net">Leizingyiu</a></h1>
+    <p><small>fork from <a
+                href="https://codepen.io/wzc570738205/pen/RwrjLbq">https://codepen.io/wzc570738205/pen/RwrjLbq</a><br>
+            script from <a
+                href="http://wzhichao.gitee.io/smartparse/#/smartParse/import/es5">http://wzhichao.gitee.io/smartparse/#/smartParse/import/es5</a>
+        </small></p>
+
+    <!-- <script src="http://wzhichao.gitee.io/smartParsePro/js/pcasCode.js"></script>
 <script src="http://wzhichao.gitee.io/smartParsePro/js/zipCode.js"></script>
 <script src="http://wzhichao.gitee.io/smartParsePro/js/address_parse.js"></script> -->
-<script src="pcasCode.js"></script>
-<script src="zipCode.js"></script>
-<script src="address_parse.js"></script>
+    <script src="pcasCode.js"></script>
+    <script src="zipCode.js"></script>
+    <script src="address_parse.js"></script>
 
-<h3>测试示例</h3>
-<ol>
-    <li>广东省珠海市香洲区盘山路28号幸福茶庄,陈景勇，13593464918</li>
-    <li>马云，陕西省西安市雁塔区丈八沟街道高新四路高新大都荟 13593464918</li>
-    <li>陕西省西安市雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
-    <li>西安市雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
-    <li>雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
-    <li>北京市朝阳区姚家园3楼 13593464918 马云</li>
-    <li>河北省石家庄市新华区中华北大街68号鹿城商务中心6号楼1413室 150-3569-6956 马云</li>
-    <li>疆维吾尔自治区乌鲁木齐市沙依巴克区西虹东路463号 400-1808855 小红</li>
-    <li>新疆阿克苏温宿县博孜墩柯尔克孜族乡吾斯塘博村一组306号 800-8585222 马云</li>
-</ol>
+    <h3>测试示例</h3>
+    <ol>
+        <li>广东省珠海市香洲区盘山路28号幸福茶庄,陈景勇，13593464918</li>
+        <li>马云，陕西省西安市雁塔区丈八沟街道高新四路高新大都荟 13593464918</li>
+        <li>陕西省西安市雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
+        <li>西安市雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
+        <li>雁塔区丈八沟街道高新四路高新大都荟710061 刘国良 13593464918 211381198512096810</li>
+        <li>北京市朝阳区姚家园3楼 13593464918 马云</li>
+        <li>河北省石家庄市新华区中华北大街68号鹿城商务中心6号楼1413室 150-3569-6956 马云</li>
+        <li>疆维吾尔自治区乌鲁木齐市沙依巴克区西虹东路463号 400-1808855 小红</li>
+        <li>新疆阿克苏温宿县博孜墩柯尔克孜族乡吾斯塘博村一组306号 800-8585222 马云</li>
+    </ol>
 
-<hr>
-<main>
-    <h3>识别设置</h3>
-    <textarea name="填入文本" id="address" placeholder='请在这里输入或者粘贴整段的姓名电话地址，粘贴后点击页面空白处将自动识别' rows="10"></textarea>
-    <div id="value"></div>
-    <hr><br>
-    <pre id='result'>将在这里生成结果<pre>
+    <hr>
+    <main>
+        <h3>识别设置</h3>
+        <textarea name="填入文本" id="address" placeholder='请在这里输入或者粘贴整段的姓名电话地址，粘贴后点击页面空白处将自动识别' rows="10"></textarea>
+        <div id="value"></div>
+        <hr><br>
+        <pre id='result'>将在这里生成结果<pre>
 </main>
 
 <script src="script.js"></script>
@@ -41,3 +52,5 @@
     by leizingyiu
     Created: 2023/09/04 14:23:00
     Last update: 2023/09/05 13:02:08</small>
+</body>
+</html>
