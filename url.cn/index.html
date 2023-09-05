@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    timeStamp = {
+        Created: "2023/05/09 16:55:39"
+        ,
+        Last_update: "2023/05/09 20:25:00"
+        ,
+        Last_modified: "2023/05/13 11:18:11"
+    }
+    window.addEventListener('load',
+        function () {
+            document.getElementById('about').innerText =
+                `by leizingyiu
+Created: ${timeStamp.Created}
+Last update: ${timeStamp.Last_update}`;
+
+        }
+    )
+</script>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='author' content='leizingyiu' />
+
+    <title>URL点COM - by leizingyiu</title>
+</head>
+
+<body>
+    <main>
+        <h1 id="title"></h1>
+        <dl>
+            <dt>
+                <textarea name="" id="input" cols="30" rows="10"></textarea>
+            </dt>
+            <dd>
+                <p id="inputP"></p>
+                <span id="inputE"></span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                <textarea name="" id="output" cols="30" rows="10"></textarea>
+            </dt>
+            <dd>
+                <p id="outputP"></p>
+                <span id="outputE"></span>
+            </dd>
+        </dl>
+        <span id="about"></span>
+    </main>
+    <script>
+        let lang = 'cn';
+        if (/^en\b/.test(navigator.language)) {
+            lang = 'en';
+        }
+
+        const contents = {
+            'cn': {
+                'title': "URL 点 CN",
+                'inputP': `粘贴‘网址’，<br> 按 [回车] 复制到 📋剪贴板 。`,
+                'outputP': `粘贴‘网了个址’，<br> 按 [回车] 在新窗口打开 🌐页面。`,
+                'inputE': 'http://website.url',
+                'outputE': 'http冒号斜杠斜杠website点url'
+            },
+            'en': {
+                'title': "URL(dot)CN",
+                'inputP': `Paste 'url', <br> press [Enter] to copy to 📋 clipboard .`,
+                'outputP': `Paste the 'web address', <br> press [Enter] to open the 🌐 page in a new window.`,
+                'inputE': 'http://website.url',
+                'outputE': 'http冒号斜杠斜杠website点url'
+            }
+        };
+        function contentUpcate(l) {
+            if (arguments.length == 1 && typeof arguments[0] == 'string' && 'cn,en'.indexOf(arguments[0] != -1)) {
+                lang = l;
+            }
+            Object.keys(contents[lang]).map(k => {
+                document.querySelector('#' + k).innerHTML = contents[lang][k];
+            })
+        }
+        window.addEventListener('load', contentUpcate);
+
+        function clearAllTimer() {
+            [...new Array(setTimeout(';'))].map((n, idx) => idx).map(i => clearTimeout(i));
+        }
+
+        function copyStr(str) {
+            var a = document.createElement("textarea");
+            a.value = str;
+            document.body.appendChild(a);
+            a.select();
+            document.execCommand("Copy");
+            a.style.display = "none";
+            window.alert(str + "内容已复制到剪贴板");
+        };
+
+
+        const dist = [' "\'#%&()+,/:;<=>?@\\|.',
+            '空格，双引号，单引号，井号，百分比，和，左括号，右括号，加号，逗号，斜杠，冒号，分号，小于，等于，大于，问号，艾特，反杠，竖杠，点',
+            '(Space),(double quote),(single quote),(pound sign),(percentage),(and),(left parenthesis),(right parenthesis),(plus sign),(comma),(slash),(colon),(semicolon),(less than),(equal to),(greater than),(question mark),(aite),(backslash),(vertical bar),(dot)'],
+            reg1 = new RegExp(`[${dist[0]}]`, "g"),
+            answer1 = dist[lang == 'cn' ? 1 : 2].split(/[，,]/),
+            answer2 = dist[lang == 'cn' ? 2 : 1].split(/[，,]/),
+            reg2 = new RegExp(`(${answer1.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g'),
+            reg3 = new RegExp(`(${answer2.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g');
+
+        const input = document.getElementById('input'), output = document.getElementById('output');
+
+        const list = [input, output];
+
+        function inputT(e) {
+            let v;
+            // console.log(typeof e)
+            if (typeof e == 'string') {
+                v = e;
+            } else if (arguments.length == 0) {
+                v = input.innerHTML;
+            } else {
+                v = e.target.value;
+            }
+            let V = v.replace(reg1, function () {
+                let a = lang == 'cn' ? answer1 : answer2;
+                return a[dist[0].indexOf(arguments[0])];
+            });
+            if (typeof e != 'string') {
+                output.setAttribute('value', V);
+                output.innerText = V;
+                output.value = V;
+            }
+            return V;
+        }
+        function outputT(e) {
+            let v = e.target.value;
+            v.match(reg2) && lang != 'cn' ? contentUpcate('cn') : '';
+            v.match(reg3) && lang != 'en' ? contentUpcate('en') : '';
+            let V = v
+                .replace(reg2, function () {
+                    return dist[0][answer1.indexOf(arguments[0])];
+                })
+                .replace(reg3, function () {
+                    return dist[0][answer2.indexOf(arguments[0])];
+                })
+                ;
+            input.setAttribute('value', V);
+            input.innerText = V;
+            input.value = V;
+            return V;
+        }
+        input.addEventListener('input', inputT);
+        output.addEventListener('input', outputT);
+        input.addEventListener('keyup', function () {
+            if (event.keyCode == 13) {
+                if (!event.metaKey) {
+                    event.preventDefault();
+                    copyStr(output.value);
+                } else {
+                    this.value = this.value + '\n';
+                    this.innerText = this.innerText + '\n';
+
+                    output.value = output.value + '\n';
+                    output.innerText = output.innerText + '\n';
+                }
+            }
+
+        })
+        output.addEventListener('keyup', function () {
+            if (event.keyCode == 13) {
+                if (!event.metaKey) {
+                    event.preventDefault();
+                    window.open(input.value);
+                } else {
+                    this.value = this.value + '\n';
+                    this.innerText = this.innerText + '\n';
+
+                    input.value = input.value + '\n';
+                    input.innerText = input.innerText + '\n';
+                }
+            }
+        })
+
+
+
+
+        function writing(dom, text, dir, callback, elseCallback) {
+            if (dir != -1 && dir != 1) {
+                throw ('dir error: -1 / 1 ')
+            }
+            if ((dir == -1 && dom.innerHTML.length > 0) || (dir == 1 && dom.innerHTML.length < text.length)) {
+                // 追加文字
+                dom.innerHTML = dir == -1 ? dom.innerHTML.slice(0, dom.innerHTML.length - 1) : text.slice(0, dom.innerHTML.length + 1);
+                callback();
+                let timer = setTimeout(writing, Math.random() * 200, ...arguments)
+                // console.log(timer) // 这里会依次打印 1 2 3 4 5 6 7 8 9 10
+            } else {
+                if (elseCallback) { elseCallback() }
+            }
+        }
+
+        window.addEventListener('load', function () {
+            document.getElementById('input').innerText = window.location.href;
+            document.getElementById('input').setAttribute('placeholder', '粘贴网址，如：\n\n' + window.location.href);
+            document.getElementById('output').innerText = inputT(window.location.href);
+            document.getElementById('output').setAttribute('placeholder', '粘贴‘网了个址’，如：\n\n' + inputT(window.location.href));
+
+            setTimeout(function () {
+                input.innerHTML = '';
+                writing(input, window.location.href, 1, inputT, function () {
+                    setTimeout(function () {
+                        writing(input, window.location.href, -1, inputT);
+                    }, 2000);
+                });
+            }, 2000);
+
+        });
+
+        function defaultClick() {
+            clearAllTimer();
+            input.removeEventListener('click', defaultClick);
+            output.removeEventListener('click', defaultClick);
+        }
+        input.addEventListener("click", defaultClick);
+        output.addEventListener("click", defaultClick);
+
+    </script>
+    <style>
+        body {
+            width: 50%;
+            min-width: 96vmin;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        main h1 {
+            font-size: 10vmin;
+            font-weight: 100;
+            opacity: 0.24;
+        }
+
+        dl {
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+            width: fit-content;
+            margin: 2em 0;
+        }
+
+        dt {
+            margin-right: 1em;
+        }
+
+        dt>textarea {
+            padding: 1em;
+            font-size: 1.2em;
+            line-height: 1.5em;
+        }
+
+        dd {
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+
+            opacity: 0.5;
+            transition: opacity 1s ease;
+        }
+
+        dd>p {
+            font-size: 1.5em;
+            font-weight: 400;
+            line-height: 2em;
+
+            transition: font-weight 0.6s ease;
+        }
+
+        dd>span {
+            opacity: 0.64;
+        }
+
+        dl:hover dd>p {
+            font-weight: 500;
+        }
+
+        dl:hover dd {
+            opacity: 0.8;
+
+        }
+
+        #about {
+            line-height: 1.75em;
+            opacity: 0.64;
+        }
+    </style>
+</body>
+
+</html>

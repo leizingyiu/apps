@@ -31,22 +31,30 @@
 
     <script>
 
-        let items = [
-            'deepLayers',
-            'LRC_Maker'
-        ];
+        let items = {
+            'deepLayers': '',
+            'LRC_Maker': 'https://leizingyiu.gitee.io/lrc_maker',
+            'url.cn': '',
+            'AddressTextProcessing': ''
+        };
 
         let frag = document.createDocumentFragment()
         let ul = document.createElement('ul');
-        for (item of items) {
+        Object.keys(items).map(item => {
             console.log(item);
             let li = document.createElement('li');
             let a = document.createElement('a');
-            a.setAttribute('href', `./${item}/`);
+            if (items[item] == '') {
+                a.setAttribute('href', `./${item}/`);
+            } else {
+                a.setAttribute('href', items[item]);
+            }
             a.innerText = item;
             li.appendChild(a);
             ul.appendChild(li);
-        }
+        })
+
+
         frag.appendChild(ul);
         document.querySelector('body').appendChild(frag);
 
