@@ -15,11 +15,22 @@ const dict = {
 };
 
 const main = document.querySelector("main"),
-    inputArea = document.getElementById("inputArea");
+    contentArea = document.getElementById("contentArea");
+
+let replaceP = document.createElement('p');
+replaceP.innerHTML = '请输入需要<b>替换去掉</b>的内容文本，用英文逗号分隔<br>';
+let replaceInput = document.createElement('input');
+replaceInput.id = 'replaceInput';
+replaceInput.value = '收货人:,手机号码:,所在地区:,详细地址:';
+main.insertBefore(replaceP, contentArea);
+// replaceInput.style.display = 'block';
+// replaceInput.style.width = '100%';
+replaceP.appendChild(replaceInput);
+
 
 let settingP = document.createElement("p");
 settingP.innerHTML = `<b>行顺序设置</b>： 请填入 ${Object.keys(dict).join(",")}，使用英文逗号分隔。\n`;
-main.insertBefore(settingP, inputArea);
+main.insertBefore(settingP, contentArea);
 
 let settingInput = document.createElement("input");
 settingInput.id = 'settingInput';
@@ -32,7 +43,7 @@ let splitP = document.createElement("p");
 splitP.innerHTML =
     "请选择输出分隔符，comma为英文逗号，tabs为制表符，选择input请在右侧填入<br>";
 
-main.insertBefore(splitP, inputArea);
+main.insertBefore(splitP, contentArea);
 
 let splitSelector = document.createElement("select"),
     splitDict = {
@@ -54,11 +65,14 @@ splitInput.setAttribute("disabled", "true");
 splitP.appendChild(splitSelector);
 splitP.appendChild(splitInput);
 
+
+
+
 const emptyText = "-";
 
 let emptyP = document.createElement("p");
 emptyP.innerText = "请填入空内容项的占位符";
-main.insertBefore(emptyP, inputArea);
+main.insertBefore(emptyP, contentArea);
 
 let emptyInput = document.createElement("input");
 emptyInput.value = " ";
@@ -67,7 +81,7 @@ emptyP.appendChild(emptyInput);
 let emptyCellP = document.createElement("p");
 emptyCellP.innerText =
     "请填入空单元格的占位符。即上面设置的分隔符中，整段缺失才显示的字符";
-main.insertBefore(emptyCellP, inputArea);
+main.insertBefore(emptyCellP, contentArea);
 
 let emptyCellInput = document.createElement("input");
 emptyCellInput.value = "此格无内容";
@@ -76,7 +90,7 @@ emptyCellP.appendChild(emptyCellInput);
 
 let sortP = document.createElement('p');
 sortP.innerText = '是否使用排序？'
-main.insertBefore(sortP, inputArea);
+main.insertBefore(sortP, contentArea);
 
 let sortInput = document.createElement('input');
 sortInput.type = 'checkbox';
@@ -88,7 +102,7 @@ sortInput.onclick = function (e) {
         document.getElementById('inputArea').classList.add('withSortRef');
         document.getElementById('resultArea').classList.add('withSortRef');
 
-        [sortBtn, sortElseSpan, document.getElementById('newSortRef')].map(d => {
+        [sortBtn, sortElseSpan].map(d => {
             d.style.display = 'initial';
         });
 
@@ -96,7 +110,7 @@ sortInput.onclick = function (e) {
         document.getElementById('inputArea').classList.remove('withSortRef');
         document.getElementById('resultArea').classList.remove('withSortRef');
 
-        [sortBtn, sortElseSpan, document.getElementById('newSortRef')].map(d => {
+        [sortBtn, sortElseSpan].map(d => {
             d.style.display = 'none';
         });
 
@@ -105,6 +119,12 @@ sortInput.onclick = function (e) {
 }
 
 let sortElseSpan = document.createElement('span');
+sortElseSpan.style.cssText = `
+padding: 0 1em;
+border-left: solid 1px #ccc;
+border-right: solid 1px #ccc;
+margin: 1em;
+`;
 sortElseSpan.innerText = '是否显示排序后剩余的行？';
 let sortElseInput = document.createElement('input');
 sortElseInput.type = 'checkbox';
@@ -116,17 +136,17 @@ sortElseSpan.style.display = 'none';
 
 let sortBtn = document.createElement('button');
 sortBtn.innerText = '刷新排序';
-sortBtn.style.display = 'none';
+sortBtn.style.cssText = `display:none;    `;
 sortBtn.onclick = mainFn;
 
-inputArea.after(sortBtn);
+sortP.appendChild(sortBtn);
 
 
 let copyBtn = document.createElement('button');
 copyBtn.innerText = '复制结果';
 copyBtn.setAttribute('disabled', 'true');
-
-main.insertBefore(copyBtn, document.getElementById('resultArea'));
+copyBtn.style.cssText = `vertical-align: middle;margin-left:1em;`;
+document.getElementById('resultTitle').appendChild(copyBtn);
 
 copyBtn.onclick = function () {
     if (!this.hasAttribute('disabled')) {
@@ -134,15 +154,26 @@ copyBtn.onclick = function () {
     }
 }
 
+function placeHolderReflesh(e) {
+    // [...document.querySelectorAll('div[contenteditable]')].map(d => {
+    const d = e.target;
+    if (d.innerText.length == 0) {
+        d.classList.remove('filled');
+    } else {
+        d.classList.add('filled');
+    }
+    // });
+}
 function mainFn() {
-    console.log('mainfn');
-
     const splitor =
         splitSelector.value == "input" ? splitInput.value : splitSelector.value;
 
+    console.log(splitor);
+
+
     let input = document.querySelector("#address"),
         result = document.getElementById('result'),
-        resultText = input.value.split(/\n/g).map((d) => smart(d)),
+        resultText = input.innerText.split(/\n/g).map((d) => smart(d.replace(/\s+/g, ' '))),
         format = settingInput.value;
 
     if (input.value != '') { copyBtn.removeAttribute('disabled'); } else { copyBtn.setAttribute('disabled', 'true'); }
@@ -172,7 +203,7 @@ function mainFn() {
 
     if (sortInput.checked == true) {
         let _new = document.getElementById('newSort'), _now = document.getElementById('nowSort'),
-            _newArr = _new.value.split(/\n/g), _nowArr = _now.value.split(/\n/g);
+            _newArr = _new.innerText.split(/\n/g), _nowArr = _now.innerText.split(/\n/g);
 
         result.innerHTML = ``;
 
@@ -187,7 +218,7 @@ function mainFn() {
             return;
         }
 
-        if (_new.value == '') {
+        if (_new.innerText == '') {
             result.innerHTML = `<p style='color:red;'>请填入 ‘目标排序参考列’</p>`;
             return;
         }
@@ -219,7 +250,8 @@ function mainFn() {
             result.innerHTML = resultText.join("<br>");
         }
 
-        document.getElementById('newSortRef').innerHTML = _newArr.join('<br>');
+
+        // document.getElementById('newSortRef').innerHTML = _newArr.join('<br>');
 
     } else {
         result.innerHTML = resultText.join("<br>");
@@ -246,7 +278,22 @@ sortElseInput.oninput = mainFn;
 splitInput.oninput = mainFn;
 settingInput.oninput = mainFn;
 
-document.querySelector("#address").onblur = mainFn;
+[...document.querySelectorAll('.sortRef,div[contenteditable]')].map(d => {
+    d.addEventListener('keyup', placeHolderReflesh);
+    d.addEventListener('mouseup', placeHolderReflesh);
+})
+
+function addressEditFn(e) {
+    console.log(e, this);
+    this.innerHTML = this.innerText.replace(/[\s\n\r]*$/g, '');
+    mainFn();
+}
+
+const address = document.querySelector("#address")
+address.addEventListener('blur', addressEditFn);
+
+// address.addEventListener('DOMCharacterDataModified', addressEditFn);
+// address.addEventListener('keyup', addressEditFn);
 
 
 

@@ -39,34 +39,45 @@
     <hr>
     <main>
         <h3>识别设置</h3>
-        <div id="inputArea" class="">
-            <div class="sortRef">
-                <h5>目标排序参考列</h5>
-                <textarea id="newSort" placeholder="请输入目标表格的排序参考列"></textarea>
+        <div id="contentArea">
+            <div id="inputArea" class="">
+                <div class="sortRef">
+                    <h5>当前排序列</h5>
+                    <div contenteditable id="nowSort" placeholder="请输入当前表格的排序参考列"></div>
+                </div>
+                <div>
+                    <h5>地址内容列</h5>
+                    <div contenteditable id="address" placeholder='请在这里输入或者粘贴整段的姓名电话地址，粘贴后点击页面空白处将自动识别'></div>
+                </div>
             </div>
-            <div class="sortRef">
-                <h5>当前排序参考列</h5>
-                <textarea id="nowSort" placeholder="请输入当前表格的排序参考列"></textarea>
-            </div>
-            <div>
-                <h5>地址内容列</h5>
-                <textarea name="填入文本" id="address" placeholder='请在这里输入或者粘贴整段的姓名电话地址，粘贴后点击页面空白处将自动识别'
-                    rows="10"></textarea>
-            </div>
+            <div id="resultArea">
+                <div class="sortRef">
+                    <h5>目标排序列</h5>
+                    <div contenteditable id="newSort" placeholder="请输入目标表格的排序参考列"></div>
+                </div>
+                <!-- <pre id="newSortRef" style="display: none;">将在这里显示<br>目标排序参考列</pre> -->
+                <div>
+                    <h5 id='resultTitle' style="    white-space: nowrap;">地址结果列</h5>
+                    <pre id='result'>将在这里生成结果<pre>
+                </div>
         </div>
-        <hr><br>
-        <div id="resultArea">
-            <pre id="newSortRef" style="display: none;">将在这里显示<br>目标排序参考列</pre>
-            <pre id='result'>将在这里生成结果<pre>
-        </div>
+    </div>
 </main>
 
 <script src="script.js"></script>
 
 <link rel="stylesheet" href="style.css">
+<!-- <small class="footer">
+    by leizingyiu
+    Created: 2023/09/04 14:23
+    Last update: 2023/09/05 13:02:08</small> -->
+<!-- <small class="footer">
+    by leizingyiu
+    Created: 2023/09/04 14:23
+    Last update: 2023/09/06 13:22</small> -->
 <small class="footer">
     by leizingyiu
     Created: 2023/09/04 14:23
-    Last update: 2023/09/06 13:22</small>
+    Last update: 2023/09/08 19:41</small>
 </body>
 </html>
