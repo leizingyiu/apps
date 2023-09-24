@@ -1,0 +1,422 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>fatterPng by leizingyiu</title>
+    <script>
+        let copyright = {
+            Created: "2023/09/15",
+            Last_modified: "2023/09/25 01:55:58",
+            Name: "fatterPng",
+            Version: "0.1",
+            Description: "快速为图片增肥，以符合上传图片最小文件大小要求",
+            Author: "Leizingyiu",
+            Github: "https://github.com/leizingyiu",
+            License: "GNU AGPLv3",
+        };
+        console.log(JSON.stringify(copyright, ' ', 1).replace(/[\{\}]\n*/g, ''));
+    </script>
+    <style>
+        #dropZone {
+            --border: 2em;
+            width: calc(100vw - var(--border) - 20px);
+            height: calc(100vh - var(--border) - 20px);
+            box-sizing: border-box;
+            border: dashed var(--border) #ccc;
+            border-radius: 6em;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            display: flex;
+            /* place-items: center; */
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+        }
+
+        #dropZone.empty::before {
+            content: "请拖文件到此处，或者点击打开上传窗口";
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .empty {
+            cursor: pointer;
+        }
+
+        .on-hover {
+            opacity: 0.5;
+        }
+
+
+        #filesList {
+            padding: 0;
+            list-style-type: none;
+
+            flex-wrap: wrap;
+            display: flex;
+            cursor: default;
+        }
+
+        #filesList li {
+            margin: 1.5em;
+            --font-size: 1em;
+            --line-height: calc(1.5 * var(--font-size));
+        }
+
+        #filesList object {
+            display: inline-block;
+            width: calc(3 * var(--line-height));
+            height: calc(3 * var(--line-height));
+            border: solid 1px #ddd;
+            border-radius: 2px;
+            padding: 2px;
+        }
+
+        #filesList p {
+            display: inline-block;
+            line-height: var(--line-height);
+            padding: 0;
+            margin: 0 0 0 0.5em;
+        }
+
+        #filesList p span {
+            display: block;
+            opacity: 0.64;
+        }
+
+        #filesList p span[for=name] {
+            opacity: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 15em;
+        }
+
+        main {
+            position: fixed;
+            left: 50%;
+            bottom: 6em;
+            transform: translate(-50%, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container empty" ondrop="handleDrag(event)" ondragleave="handleDragEnd()" ondragend="handleDragEnd()"
+        ondragover="handleDragOver(event)" onclick="document.querySelector('#file').click()" id="dropZone">
+        <ul id="filesList"></ul>
+    </div>
+
+    <script data-comment="drag">
+        function handleDragOver(event) {
+            event.preventDefault();
+            document.querySelector('.container').classList.add('on-hover')
+            return false;
+        }
+        function handleDragOver(event) {
+            event.preventDefault();
+            document.querySelector('.container').classList.add('on-hover')
+            return false;
+        }
+
+        function handleDragEnd() {
+            event.preventDefault();
+            document.querySelector('.container').classList.remove('on-hover')
+            return false;
+        }
+
+        const files = {};
+
+        function handleDrag(event) {
+            event.preventDefault()
+
+            handleDragEnd()
+
+
+            if (typeof files == 'undefined') {
+                files = {};
+            }
+            let _files = event.dataTransfer.files;
+
+
+            loadFiles(_files)
+
+
+
+
+
+
+            return false;
+        }
+
+        function loadFiles(_files) {
+
+            if (_files.length > 0 && Boolean(document.querySelector('.empty'))) {
+                document.querySelector('.empty').classList.remove('empty');
+            }
+
+
+            if (typeof files == 'undefined') {
+                files = {};
+            }
+            for (let i = 0; i < _files.length; i++) {
+                let file = _files[i], name = file.name, lastModified = file.lastModified;
+                let fileId = name + '_' + lastModified;
+                files[fileId] = file;
+
+
+
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    var data = reader.result;
+
+                    let li = document.createElement('li');
+                    li.id = fileId;
+                    let obj = document.createElement('object');
+                    let p = document.createElement('p');
+                    let [name, size, lastmodified] = "name,size,lastmodified"
+                        .split(',')
+                        .map(n => {
+                            let i = document.createElement('span');
+                            i.setAttribute('for', n); return i;
+                        });
+
+                    if (Boolean(document.getElementById(fileId))) {
+                        li = document.getElementById(fileId);
+                        obj = li.querySelector('object');
+                        p = li.querySelector('p');
+                        [name, size, lastmodified] = "name,size,lastmodified"
+                            .split(',')
+                            .map(n => li.querySelector(`[for=${n}]`));
+                    }
+
+
+                    obj.setAttribute('data', data);
+                    obj.setAttribute('type', file.type);
+                    obj.style.objectFit = 'contain';
+                    name.innerText = file.name;
+                    name.setAttribute('alt', file.name);
+                    let fileSize = Number(file.size),
+                        _fileSize = fileSize > 1024 ?
+                            (fileSize > Math.pow(1024, 2) ?
+                                (fileSize / Math.pow(1024, 2)).toFixed(2) + 'MB' :
+                                (fileSize / Math.pow(1024, 1)).toFixed(2) + 'KB') :
+                            fileSize;
+
+                    size.innerText = _fileSize;
+                    lastmodified.innerText = (new Date(file.lastModifiedDate)).toLocaleString();
+
+                    if (!Boolean(document.getElementById(fileId))) {
+                        [name, size, lastmodified].map(i => { p.appendChild(i); })
+                        li.appendChild(obj); li.appendChild(p);
+                        document.querySelector('#filesList').appendChild(li);
+                    }
+
+                };
+                reader.onerror = function () {
+                    console.log('读取失败'); console.log(reader.error);
+                }
+
+            }
+        }
+    </script>
+
+    <main><input type="file" name="file" id="file" multiple="multiple" style="display: none;" />
+        <h1 style="font-weight: 700;text-align: center;">fatterPng<span style="font-weight: 300;"> by Leizingyiu </span>
+            <br><small style="font-size: 1rem;font-weight: 300;"> ——
+                快速图片增肥，以便符合上传需要</small>
+        </h1>
+        <p style="text-align: center;">请输入最小文件大小 <input type="text" id="minFileSize" value='1000' style="width: 5em;">
+            <span style='margin-right:1em;'>
+                <label for="KB"><input type="radio" name="KBMB" id="KB" checked value="1000">KB</label>
+                <label for="MB"><input type="radio" name="KBMB" id="MB" value="1000000">MB</label>
+            </span>
+            <button id="filesDownload">保存</button>
+        </p>
+        <p style="letter-spacing: 0.02em;font-size: 0.6em;color: #999;">fatterPng by leizingyiu. Create:2023.09.15; Last
+            Modified:2023.09.25 </p>
+    </main>
+
+    <script type="text/javascript" data-comment="biggerImage">
+
+
+        function getImgMimeType(src) {
+            const PNG_MIME = 'image/png';
+            let type = src.replace(/.+\./, '').toLowerCase();
+            type = type.replace(/jpg/i, 'jpeg').replace(/svg/i, 'svg+xml');
+
+            if (!type) {
+                return PNG_MIME;
+            } else {
+                const matchedFix = type.match(/png|jpeg|bmp|gif|svg\+xml/);
+                return matchedFix ? `image/${matchedFix[0]}` : PNG_MIME;
+            }
+        }
+
+        function getExtension(path) {
+            var basename = path.split(/[\\/]/).pop(),  // extract file name from full path ...
+                // (supports `\\` and `/` separators)
+                pos = basename.lastIndexOf(".");       // get last position of `.`
+
+            if (basename === "" || pos < 1)            // if file name is empty or ...
+                return "";                             //  `.` not found (-1) or comes first (0)
+
+            return basename.slice(pos + 1);            // extract extension ignoring `.`
+        }
+
+        function blobToArrayBuffer(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve(reader.result);
+                };
+                reader.onabort = reject;
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(blob);
+            });
+        }
+
+        async function fatterImage(file, minFileSize = 1024) {
+
+            console.log(minFileSize);
+
+            const buffer = await blobToArrayBuffer(file);
+            const sourceData = new Uint8Array(buffer);
+            const targetData = new Uint8Array(Math.max(sourceData.length, minFileSize));
+            for (let i = 0; i < targetData.length; i += 1) { targetData[i] = sourceData[i] || 0; }
+
+            const blob = new Blob([targetData], { type: getImgMimeType(getExtension(file.name)) });
+
+            return blob;
+        }
+
+
+
+        async function saveBlobToFile(blob, filename) {
+            console.log(arguments);
+
+            var urlObject = window.URL || window.webkitURL || window;
+
+            var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+
+            save_link.href = await window.URL.createObjectURL(blob);
+            save_link.download = filename;
+
+            fake_click(save_link);
+
+        }
+
+
+
+        var input = document.getElementById('file');
+
+
+        input.addEventListener('change', function () {
+            var _files = document.getElementById('file').files;
+            console.log(_files, _files.length);
+
+            loadFiles(_files);
+        });
+
+
+
+        function fake_click(obj) {
+            var ev = document.createEvent("MouseEvents");
+            ev.initMouseEvent(
+                "click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null
+            );
+            obj.dispatchEvent(ev);
+        }
+
+
+
+        document.getElementById('minFileSize').oninput = function (e) {
+            console.log(e, this);
+            if (isFinite(Number(this.value))) {
+                this.value = (this.value);
+            } else {
+                this.value = (this.value.replace(/[^\d/.]*/g, ''));
+                this.value = this.value.match(/\./g).length > 1 ? this.value.replace(/\.([^\.]*)$/, '$1') : this.value;
+            }
+        }
+
+
+    </script>
+
+
+
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/jszip/3.10.0/jszip.min.js"></script> -->
+    <script src="./jszip_3.10.0_jszip.min.js"></script>
+    <script data-comment="download">
+        // // 引入js文件
+        // import '@/libs/jszip'
+
+        document.getElementById('filesDownload').onclick = async function () {
+
+
+            let minFileSize = document.getElementById('minFileSize').value,
+                KBMB = Number([...document.querySelectorAll('[name="KBMB"]')].filter(i => i.checked)[0].value);
+            minFileSize = isFinite(Number(minFileSize)) ?
+                Number(minFileSize) * KBMB :
+                5 * KBMB;
+            console.log('minFileSize = ', minFileSize, 'KBMB', KBMB);
+
+            async function _fatterImage(f) {
+                let result = await fatterImage(f, minFileSize);
+                return result;
+            }
+
+            if (Object.values(files).length == 1) {
+                let file = Object.values(files)[0];
+                let downloadFile = await _fatterImage(file);
+                saveBlobToFile(downloadFile, file.name);
+
+            } else {
+                let zip = new JSZip();
+
+
+                // for (let i = 0; i < files.length; i++) {
+                //     let file = files(i);
+                //     let content = biggerImage(file);
+                //     zip.file(file.name, content);
+                // }
+
+                Object.values(files).map(file => {
+                    zip.file(file.name, _fatterImage(file));
+                })
+
+
+                zip.generateAsync({
+                    type: 'blob'
+                }).then(function (content) {
+                    var filename = 'fatter' + '.zip';
+                    var el = document.createElement('a');
+                    el.download = filename;
+                    el.style.display = 'none';
+                    el.href = URL.createObjectURL(content);
+                    document.body.appendChild(el);
+                    el.click();
+                    document.body.removeChild(el);
+                });
+
+            }
+
+
+
+
+        };
+
+    </script>
+
+
+</body>
+
+</html>
