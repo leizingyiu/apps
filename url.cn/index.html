@@ -4,16 +4,14 @@
     timeStamp = {
         Created: "2023/05/09 16:55:39"
         ,
-        Last_update: "2023/05/09 20:25:00"
+        Last_update: "2023/10/18 17:12:31"
         ,
-        Last_modified: "2023/05/13 11:18:11"
+        Last_modified: "2024/02/16 14:55:05"
     }
     window.addEventListener('load',
         function () {
             document.getElementById('about').innerText =
-                `by leizingyiu
-Created: ${timeStamp.Created}
-Last update: ${timeStamp.Last_update}`;
+                `by leizingyiu ;  Created: ${timeStamp.Created} ;  Last update: ${timeStamp.Last_update}`;
 
         }
     )
@@ -53,28 +51,47 @@ Last update: ${timeStamp.Last_update}`;
         <span id="about"></span>
     </main>
     <script>
-        let lang = 'cn';
-        if (/^en\b/.test(navigator.language)) {
-            lang = 'en';
-        }
 
-        const contents = {
-            'cn': {
-                'title': "URL 点 CN",
-                'inputP': `粘贴‘网址’，<br> 按 [回车] 复制到 📋剪贴板 。`,
-                'outputP': `粘贴‘网了个址’，<br> 按 [回车] 在新窗口打开 🌐页面。`,
-                'inputE': 'http://website.url',
-                'outputE': 'http冒号斜杠斜杠website点url'
-            },
-            'en': {
-                'title': "URL(dot)CN",
-                'inputP': `Paste 'url', <br> press [Enter] to copy to 📋 clipboard .`,
-                'outputP': `Paste the 'web address', <br> press [Enter] to open the 🌐 page in a new window.`,
-                'inputE': 'http://website.url',
-                'outputE': 'http冒号斜杠斜杠website点url'
+        function init() {
+
+
+            lang = 'cn';
+            if (/^en\b/.test(navigator.language)) {
+                lang = 'en';
             }
-        };
+            dist = [' "\'#%&()+,/:;<=>?@\\|.',
+                '空格，双引号，单引号，井号，百分比，和，左括号，右括号，加号，逗号，斜杠，冒号，分号，小于，等于，大于，问号，艾特，反杠，竖杠，点',
+                '(Space),(double quote),(single quote),(pound sign),(percentage),(and),(left parenthesis),(right parenthesis),(plus sign),(comma),(slash),(colon),(semicolon),(less than),(equal to),(greater than),(question mark),(aite),(backslash),(vertical bar),(dot)'],
+                reg1 = new RegExp(`[${dist[0]}]`, "g"),
+                answer1 = dist[lang == 'cn' ? 1 : 2].split(/[，,]/),
+                answer2 = dist[lang == 'cn' ? 2 : 1].split(/[，,]/),
+                reg2 = new RegExp(`(${answer1.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g'),
+                reg3 = new RegExp(`(${answer2.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g');
+
+            input = document.getElementById('input'), output = document.getElementById('output');
+
+            list = [input, output];
+
+        }
+        init();
+
         function contentUpcate(l) {
+            const contents = {
+                'cn': {
+                    'title': "URL 点 CN",
+                    'inputP': `粘贴‘网址’，<br> 按 [回车] 复制到 📋剪贴板 。`,
+                    'outputP': `粘贴‘网了个址’，<br> 按 [回车] 在新窗口打开 🌐页面。`,
+                    'inputE': 'http://website.url',
+                    'outputE': 'http冒号斜杠斜杠website点url'
+                },
+                'en': {
+                    'title': "URL(dot)CN",
+                    'inputP': `Paste 'url', <br> press [Enter] to copy to 📋 clipboard .`,
+                    'outputP': `Paste the 'web address', <br> press [Enter] to open the 🌐 page in a new window.`,
+                    'inputE': 'http://website.url',
+                    'outputE': 'http冒号斜杠斜杠website点url'
+                }
+            }
             if (arguments.length == 1 && typeof arguments[0] == 'string' && 'cn,en'.indexOf(arguments[0] != -1)) {
                 lang = l;
             }
@@ -99,18 +116,7 @@ Last update: ${timeStamp.Last_update}`;
         };
 
 
-        const dist = [' "\'#%&()+,/:;<=>?@\\|.',
-            '空格，双引号，单引号，井号，百分比，和，左括号，右括号，加号，逗号，斜杠，冒号，分号，小于，等于，大于，问号，艾特，反杠，竖杠，点',
-            '(Space),(double quote),(single quote),(pound sign),(percentage),(and),(left parenthesis),(right parenthesis),(plus sign),(comma),(slash),(colon),(semicolon),(less than),(equal to),(greater than),(question mark),(aite),(backslash),(vertical bar),(dot)'],
-            reg1 = new RegExp(`[${dist[0]}]`, "g"),
-            answer1 = dist[lang == 'cn' ? 1 : 2].split(/[，,]/),
-            answer2 = dist[lang == 'cn' ? 2 : 1].split(/[，,]/),
-            reg2 = new RegExp(`(${answer1.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g'),
-            reg3 = new RegExp(`(${answer2.map(a => `(${a.replace(/([()])/g, '\\$1')})`).join('|')})`, 'g');
 
-        const input = document.getElementById('input'), output = document.getElementById('output');
-
-        const list = [input, output];
 
         function inputT(e) {
             let v;
@@ -134,7 +140,15 @@ Last update: ${timeStamp.Last_update}`;
             return V;
         }
         function outputT(e) {
-            let v = e.target.value;
+            let v;
+            // console.log(typeof e)
+            if (typeof e == 'string') {
+                v = e;
+            } else if (arguments.length == 0) {
+                v = input.innerHTML;
+            } else {
+                v = e.target.value;
+            }
             v.match(reg2) && lang != 'cn' ? contentUpcate('cn') : '';
             v.match(reg3) && lang != 'en' ? contentUpcate('en') : '';
             let V = v
@@ -145,9 +159,12 @@ Last update: ${timeStamp.Last_update}`;
                     return dist[0][answer2.indexOf(arguments[0])];
                 })
                 ;
-            input.setAttribute('value', V);
-            input.innerText = V;
-            input.value = V;
+            if (typeof e != 'string') {
+
+                input.setAttribute('value', V);
+                input.innerText = V;
+                input.value = V;
+            }
             return V;
         }
         input.addEventListener('input', inputT);
@@ -225,6 +242,39 @@ Last update: ${timeStamp.Last_update}`;
         input.addEventListener("click", defaultClick);
         output.addEventListener("click", defaultClick);
 
+
+
+
+
+
+
+
+        const bookmarkLink = 'javascript: \n' +
+            [init, copyStr, inputT].map(t => String(t).replace(/\s*\/\/[^\n]*/g, '')).join(';\n') +
+            `\n init();         
+let i=window.prompt('${lang == 'cn' ? "请输入需要还原的网址；\n如需转译当前网址，请直接按回车" : "Please enter the URL that needs to be restored;\nIf you need to translate the current URL, please press Enter directly."}');
+if(i.length==0){
+copyStr(inputT(window.location.href))
+}else{
+window.location=outputT(i);
+}`;
+        let bookmarkContainer = document.createElement('ul');
+        bookmarkContainer.id = 'bookmarkContainer';
+        document.querySelector('main').insertBefore(bookmarkContainer, document.querySelector('#about'));
+
+        [cnBookmark, enBookmark] = ['url点cn', 'url(dot)cn'].map(t => {
+            let a = document.createElement('a');
+            a.innerText = t;
+            a.href = bookmarkLink;
+            return a.outerHTML;
+        });
+        [`也可以把书签${cnBookmark}拖到书签栏使用`, `or you can use this bookmark ${enBookmark}`].map(t => {
+            let li = document.createElement('li');
+            li.innerHTML = t;
+            bookmarkContainer.appendChild(li);
+        });
+
+
     </script>
     <style>
         body {
@@ -298,6 +348,21 @@ Last update: ${timeStamp.Last_update}`;
         dl:hover dd {
             opacity: 0.8;
 
+        }
+
+        #bookmarkContainer {
+            opacity: 0.64;
+            margin-bottom: 1em;
+        }
+
+        #bookmarkContainer li {
+            display: inline-block;
+            margin-right: 2em;
+        }
+
+        #bookmarkContainer li a::before {
+            content: '🌏 ';
+            display: inline;
         }
 
         #about {
