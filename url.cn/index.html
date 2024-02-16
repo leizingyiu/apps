@@ -4,9 +4,9 @@
     timeStamp = {
         Created: "2023/05/09 16:55:39"
         ,
-        Last_update: "2023/10/18 17:12:31"
+        Last_update: "2024/02/16 15:07:05"
         ,
-        Last_modified: "2024/02/16 14:55:05"
+        Last_modified: "2024/02/16 15:07:21"
     }
     window.addEventListener('load',
         function () {
@@ -251,13 +251,15 @@
 
         const bookmarkLink = 'javascript: \n' +
             [init, copyStr, inputT].map(t => String(t).replace(/\s*\/\/[^\n]*/g, '')).join(';\n') +
-            `\n init();         
+            `\n init();  (()=>{      
 let i=window.prompt('${lang == 'cn' ? "请输入需要还原的网址；\n如需转译当前网址，请直接按回车" : "Please enter the URL that needs to be restored;\nIf you need to translate the current URL, please press Enter directly."}');
 if(i.length==0){
 copyStr(inputT(window.location.href))
 }else{
 window.location=outputT(i);
-}`;
+}
+})(); 
+`;
         let bookmarkContainer = document.createElement('ul');
         bookmarkContainer.id = 'bookmarkContainer';
         document.querySelector('main').insertBefore(bookmarkContainer, document.querySelector('#about'));
