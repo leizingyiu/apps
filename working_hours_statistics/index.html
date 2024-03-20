@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self'"> -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cdefs%3E%3CclipPath id='clip54_532'%3E%3Crect id='ab' width='24' height='24' fill='white' fill-opacity='0'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23clip54_532)'%3E%3Cpath id='wiz zard' d='M12.3613 3.00488C12.3613 3.4502 12.0625 3.7373 11.6289 3.7373C11.1982 3.7373 10.8965 3.4502 10.8965 3.00488C10.8965 2.58594 11.1982 2.29883 11.6289 2.29883C12.0625 2.29883 12.3613 2.58594 12.3613 3.00488ZM3.76855 11.5977L2.48535 11.5977L0.674805 5.08203L1.79102 5.08203L2.76074 8.84961C2.89258 9.47363 3.02441 10.0625 3.14453 10.6748L3.20605 10.6748C3.34961 10.0625 3.48145 9.46191 3.64844 8.84961L4.65625 5.08203L5.72559 5.08203L6.74512 8.84961C6.90039 9.47363 7.04688 10.0625 7.20215 10.6748L7.24902 10.6748C7.39258 10.0625 7.5127 9.47363 7.65625 8.84961L8.61719 5.08203L9.64844 5.08203L7.89648 11.5977L6.57812 11.5977L5.62891 8.08203C5.46191 7.46973 5.3418 6.86914 5.18652 6.20996L5.125 6.20996C4.98145 6.86914 4.84961 7.48145 4.68262 8.10547L3.76855 11.5977ZM12.1709 11.5977L11.0781 11.5977L11.0781 5.08203L12.1709 5.08203L12.1709 11.5977ZM18.626 11.5977L13.6924 11.5977L13.6924 11.0088L17.126 5.96973L14.0645 5.96973L14.0645 5.08203L18.5059 5.08203L18.5059 5.6709L15.0723 10.71L18.626 10.71L18.626 11.5977ZM22.3203 21.8301C21.8047 22.334 21.1221 22.7529 20.3428 22.7529C18.7109 22.7529 17.6533 21.5166 17.6533 19.3457C17.6533 17.2334 18.9863 15.915 20.4746 15.915C21.2422 15.915 21.7344 16.2021 22.3086 16.6826L22.2617 15.5547L22.2617 13.0469L23.3428 13.0469L23.3428 22.5977L22.4521 22.5977L22.3584 21.8301L22.3203 21.8301ZM10.4893 21.8184C9.86523 22.334 9.13281 22.7529 8.33008 22.7529C7.2373 22.7529 6.42285 22.082 6.42285 20.9043C6.42285 19.4893 7.65625 18.7803 10.4307 18.4697C10.4307 17.6289 10.1523 16.8262 9.08594 16.8262C8.33008 16.8262 7.64453 17.1748 7.12891 17.5205L6.69824 16.7646C7.29883 16.3809 8.22168 15.915 9.26465 15.915C10.8496 15.915 11.5205 16.9814 11.5205 18.5898L11.5205 22.5977L10.6211 22.5977L10.5244 21.8184L10.4893 21.8184ZM14.6909 22.5977L13.5981 22.5977L13.5981 16.082L14.4976 16.082L14.5942 17.2686L14.6294 17.2686C15.0864 16.4424 15.7456 15.915 16.478 15.915C16.7651 15.915 16.9702 15.9502 17.1724 16.0586L16.9702 17.0166C16.7534 16.9346 16.5981 16.9082 16.3345 16.9082C15.7925 16.9082 15.1216 17.2949 14.6909 18.4082L14.6909 22.5977ZM5.70215 22.5977L0.768555 22.5977L0.768555 22.0088L4.20215 16.9697L1.14062 16.9697L1.14062 16.082L5.58203 16.082L5.58203 16.6709L2.14844 21.71L5.70215 21.71L5.70215 22.5977ZM18.7812 19.334C18.7812 20.9043 19.4287 21.8418 20.583 21.8418C21.1807 21.8418 21.7109 21.543 22.2617 20.9424L22.2617 17.5205C21.6963 17.0283 21.207 16.8379 20.665 16.8379C19.6104 16.8379 18.7812 17.8457 18.7812 19.334ZM7.48926 20.834C7.48926 21.5781 7.99316 21.877 8.64062 21.877C9.27637 21.877 9.79492 21.5781 10.4307 21.0127L10.4307 19.1904C8.2334 19.4541 7.48926 19.9932 7.48926 20.834Z' fill='%23666666' fill-opacity='1.000000' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E">
+    <title>精力分配计算器 —— by WzdGroup/Leizingyiu</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="settings">
+            <label for="copyOption">结果范围：
+                <select name="copyOption" id="copyOption">
+                    <option value="全部复制">我全都要！</option>
+                    <option value="只复制上月" selected>只需要上月</option>
+                </select>
+            </label>
+            <label><input type="checkbox" id="exportWholeObject">输出完整数据
+                <small>(如统计数据出现异常，请保留错误结果，并再输出一份相同来源所生成的完整数据，以便debug)</small></label>
+            <a id="showDescribe">显示说明</a>
+        </div>
+
+        <div class="row">
+            <button id="act" target="working_hours_statistics.js" title="点击这里进行计算">精力、工时、人日分配统计</button>
+            <textarea id="result"></textarea>
+        </div>
+    </div>
+    <div id="describeContainer">
+        <div id="describe">
+            <div>
+                <h1>精力分配计算器 v0.9</h1>
+                <p>兼容一事一值，一事多值，一事多值带日期。</p>
+                <h3>计算所需输入格式为：</h3>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;统计表中每单元格用大括号包裹<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事与值之间使用冒号分隔（中英兼容）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多值之间用逗号分隔（中英兼容）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期与值之间用冒号分隔（中英兼容）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期使用月月日日四位数字<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;值使用数字，可带小数点，可为工时、人日，设置资金
+                </p>
+                <h3>插件使用说明：</h3>
+                <p>日常工作中根据填写规则完成填写后，复制表格中生成输出字段，点击这个页面的按钮，或者运行书签脚本，将复制的数据粘贴到弹出的输入框中；<br>如数据无错误，会弹出计算结果，并自动复制到剪贴板中；<br>如数据中出现错误，请根据具体报错进行修改调整；<br>如插件出现计算错误，请及时反馈。
+                </p>
+                <h3>表格中填写值字段的填写参考：</h3>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事一值：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2
+                </p>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事多值：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1，2，3<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5，6，7
+                </p>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事多值带日期：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0319:1，0318:2，0315:3，0322：4，0329：5<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0208:2,&nbsp;0227:5.，0301：1，0302:2，0422：4，0429：5
+                </p>
+                <h3>表格中输出值字段的参考公式：</h3>
+                <p>"{"&amp;[事项字段]&amp;":["&amp;[表格中填写值字段]&amp;"]}"</p>
+                <h4>即得到结果</h4>
+                <p>{事项字段内容:[表格中填写值字段内容]}</p>
+                <h3>插件输入值参考（复制表格中输出值字段整列）：</h3>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事一值：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{F品牌-运营:[1]}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{D品牌-联名:[2]}
+                </p>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事多值：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Z品牌-日常:[1，2，3，4，5]}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{D品牌-联名:[6，7，8，9]}
+                </p>
+                <h4>&nbsp;&nbsp;&nbsp;&nbsp;一事多值带日期：</h4>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Z品牌-日常:[208:2,&nbsp;0227:5.，0301：1，0302:2]}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{Z品牌-日常:[0201：1.0209:2，0208:1]}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{F品牌-运营:[0201：2，0209:1，0208:2]}
+                </p><br>
+                <hr>
+                <p>develop&nbsp;by&nbsp;leizingyiu<br>Created:&nbsp;"2024/03/01"<br>Last&nbsp;version:&nbsp;"2024/03/20"<br>Last&nbsp;modified:&nbsp;"2024/03/20&nbsp;16:31:11"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('act').onclick = async function (e) {
+            let d = e.target,
+                target = d.getAttribute('target');
+
+            let script = document.createElement('script');
+            script.src = './' + target;
+            await document.body.appendChild(script);
+            window.isWeb = true;
+
+            setTimeout(() => {
+                script.parentElement.removeChild(script);
+                window.isWeb = false;
+            }, 1000);
+        }
+
+        'copyOption,exportWholeObject'.split(',').map(i => {
+            const dom = document.getElementById(i);
+            window[i] = (dom.type == 'checkbox' ? dom.checked : dom.value);
+            dom.onchange = function (e) {
+                let eValue = (e.target.type == 'checkbox' ? e.target.checked : e.target.value);
+                window[i] = eValue;
+            }
+        });
+
+    </script>
+    <style>
+        body,
+        html {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        div#container {
+            flex-grow: 999;
+            display: flex;
+            flex-direction: column;
+            padding: 2em;
+            gap: 1em;
+        }
+
+        div#container * {
+            flex-grow: 999;
+            font-size: max(2vmin, 16px);
+        }
+
+        div#container>div#settings {
+            flex-shrink: 999;
+            flex-grow: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+        }
+
+        div#container label {
+            display: inline-block;
+            position: relative;
+        }
+
+        div#container small {
+            font-size: 0.6em;
+            display: block;
+
+        }
+
+        div.row {
+            display: flex;
+            flex-direction: row;
+            /* gap: 1em; */
+        }
+
+        #act {
+            cursor: pointer;
+            border-radius: 0.5rem;
+            border-width: 1px;
+            --deep: 0.5em;
+            box-shadow: 0px 0 0px -1px rgb(168, 168, 168, 1),
+                0px 0 0px 0px rgb(33, 33, 33, 1);
+            transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.3s ease, color 0.3s ease;
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        #act:hover {
+            background: #efefef;
+            color: #333;
+
+            transform: translate(0, calc(var(--deep) * -1));
+            box-shadow: 0px calc(var(--deep) - 0px) 0px -1px rgb(168, 168, 168, 1),
+                0px calc(var(--deep) - 0px) 0px 0px rgb(33, 33, 33, 1);
+        }
+
+        textarea#result {
+            max-width: 0;
+            opacity: 0;
+            transition: max-width 0.3s ease, opacity 0.5s ease;
+            font-size: 1rem;
+            padding: 0em;
+            visibility: hidden;
+            margin: 0;
+        }
+
+        textarea#result.show {
+            visibility: visible;
+            max-width: 36vw;
+            opacity: 1;
+            padding: 1em;
+            margin-left: 1em;
+            transition: max-width 0.5s ease, opacity 0.5s ease, padding 0.5s ease, margin 0.5s ease;
+        }
+
+        textarea#result.show.err {
+            color: brown;
+        }
+
+        label,
+        a {
+            cursor: pointer;
+            background-color: #fff;
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            padding: 1em 0.5em 0.5em;
+            border-radius: 0.5rem;
+        }
+
+        label:hover,
+        a:hover {
+            transform: translate(0, -0.2em);
+            box-shadow: 0px 0.2em 24px 0px rgba(0, 0, 0, 0.22);
+        }
+
+        a {
+            text-align: center;
+        }
+    </style>
+
+    <script data-comment="for  #describeContainer">
+        document.getElementById('describeContainer').onclick = function (e) {
+            e.target.classList.remove('show');
+        }
+        document.getElementById('showDescribe').onclick = function (e) {
+            document.getElementById('describeContainer').classList.add('show');
+        }
+    </script>
+    <style data-comment="for #describeContainer">
+        #showDescribe {
+            cursor: pointer;
+        }
+
+        #describeContainer.show {
+            max-height: 100%;
+            opacity: 1;
+            pointer-events: all;
+            cursor: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cdefs%3E%3CclipPath id='clip58_533'%3E%3Crect id='artboard' width='20' height='20' fill='white' fill-opacity='0'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23clip58_533)'%3E%3Crect id='r1' x='4.526855' y='2.448242' width='19.690657' height='1.514666' transform='rotate(45 4.526855 2.448242)' fill='%23333' fill-opacity='1'/%3E%3Crect id='r2' x='18.449707' y='3.521973' width='19.690657' height='1.514666' transform='rotate(135 18.449707 3.521973)' fill='%23333' fill-opacity='1'/%3E%3C/g%3E%3C/svg%3E%0A") 10 10, auto;
+        }
+
+        #describeContainer {
+            pointer-events: none;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.5s ease;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 4em;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            backdrop-filter: blur(2px);
+            box-sizing: border-box;
+            background-color: #0003;
+        }
+
+        #describeContainer.show #describe {
+            background-color: #fffc;
+            padding: 2em;
+            max-width: 100vmin;
+            margin: 0 auto;
+            border-radius: 1em;
+            cursor: default;
+        }
+
+        #describeContainer * {
+            line-height: 1.75em;
+        }
+
+        #describeContainer h1,
+        #describeContainer h2,
+        #describeContainer h3,
+        #describeContainer h4,
+        #describeContainer h5,
+        #describeContainer h6 {
+            margin-top: 1em;
+            margin-bottom: 0.25em;
+        }
+
+        #describeContainer p {
+            margin: 0;
+        }
+    </style>
+</body>
+
+</html>
