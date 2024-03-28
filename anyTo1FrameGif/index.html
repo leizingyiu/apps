@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Convert Image to GIF -- by leizingyiu</title>
+    <style>
+        body {
+            /* display: flex; */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #dropzone {
+            border: 1em dashed #ccc;
+            border-radius: 2em;
+            text-align: center;
+            width: calc(100% - 4vmax);
+            height: calc(100% - 4vmax);
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            transition: border 0.5s ease;
+            cursor: pointer;
+        }
+
+        #dropzone.dropping {
+            transition: border 0.5s ease;
+
+            border-color: #999;
+        }
+
+        #dropzone div {
+            position: relative;
+            padding: 4rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            line-height: 2em;
+            opacity: 0.2;
+        }
+
+        #thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 93%;
+            position: fixed;
+            bottom: 12em;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+
+        #thumbnails button {
+            position: absolute;
+            top: calc(100% + 1rem);
+            left: 50%;
+            transform: translate(-50%, 0);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 999999px;
+            opacity: 0.6;
+            transition: opacity 0.5s ease;
+        }
+
+        #thumbnails button:hover {
+            opacity: 1;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            object-fit: contain;
+            background: #fff3;
+            cursor: pointer;
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+            transform: translate(0px, 0em);
+            transition: box-shadow 0.5s ease, transform 0.25s ease;
+        }
+
+        .thumbnail:hover {
+            box-shadow: 0px 12px 36px 0px rgba(0, 0, 0, 0.2);
+            transform: translate(0px, -1em);
+        }
+
+        .thumbnail:after {
+            content: " ";
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg width='80.000000' height='80.000000' viewBox='0 0 80 80' fill='none' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg opacity='0.200000'%3E%3Crect rx='6.000000' width='80.000008' height='80.000000' fill='%23000000' fill-opacity='1.000000'/%3E%3C/g%3E%3Cpath d='M42 47.1714L49.8994 39.272C50.6914 38.48 51.936 38.48 52.728 39.272C53.5198 40.064 53.5198 41.3086 52.728 42.1006L41.4143 53.4141C40.6223 54.2061 39.3777 54.2061 38.5857 53.4141L27.272 42.1006C26.4802 41.3086 26.4802 40.064 27.272 39.272C28.064 38.48 29.3086 38.48 30.1006 39.272L38 47.1714L38 28C38 26.8799 38.8799 26 40 26C41.1201 26 42 26.8799 42 28L42 47.1714Z' fill='%23FFFFFF' fill-opacity='1.000000' fill-rule='evenodd'/%3E%3C/svg%3E%0A");
+            opacity: 0;
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.25s ease;
+            backdrop-filter: blur(1px);
+        }
+
+        .thumbnail:hover:after {
+            opacity: 1;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .thumbnail img {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+        }
+
+        .hide {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dropzone">
+        <div>
+            <h1>imgTo1FrameGif</h1>
+            <p>点击此处，或将图片拖拽到这里<br><small>Click or Drag and drop an image file here</small></p>
+        </div>
+    </div>
+    <div id="thumbnails" class="hide">
+        <button>Download All 1Frame GIFs</button>
+    </div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const thumbnailsContainer = document.getElementById('thumbnails');
+        const downloadAllBtn = document.querySelector('#thumbnails button');
+        // downloadAllBtn.innerText = 'Download All GIFs';
+        // thumbnailsContainer.appendChild(downloadAllBtn);
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            // dropzone.style.border = '2px dashed #333';
+            dropzone.classList.add('dropping')
+
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            // dropzone.style.border = '2px dashed #ccc';
+            dropzone.classList.remove('dropping')
+        });
+
+        dropzone.addEventListener('click', function () {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = function (event) {
+                const files = event.target.files;
+                for (let i = 0; i < files.length; i++) {
+                    file = files[i];
+                    imgToGif(file);
+                }
+                fileInput.remove();
+            };
+            fileInput.click();
+        });
+
+        dropzone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dropping');
+
+            try {
+                let file;
+                if (e.dataTransfer.files.length > 0) {
+                    files = e.dataTransfer.files;
+                    for (let i = 0; i < files.length; i++) {
+                        file = files[i];
+                        imgToGif(file)
+                    }
+                } else {
+                    const imgUrl = e.dataTransfer.getData('URL');
+                    if (imgUrl) {
+
+                        const response = await fetch(imgUrl, { mode: 'cors' });
+                        const blob = await response.blob();
+                        file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+                    }
+                    // if (file && file.type.startsWith('image/')) {
+                    if (file) {
+                        imgToGif(file)
+                    } else {
+                        alert('Please drop an image file!');
+                    }
+                }
+
+                if (typeof document.querySelector('#thumbnails .thumbnail') != "null") {
+                    document.querySelector('#thumbnails').classList.remove('hide');
+                } else {
+                    document.querySelector('#thumbnails').classList.add('hide');
+
+                }
+
+                setTimeout((function () {
+                    dropzone.classList.remove('dropping');
+                }), 2000);
+            } catch (e) { alert(e); }
+        });
+
+        downloadAllBtn.addEventListener('click', () => {
+            const thumbnails = document.querySelectorAll('.thumbnail img');
+            thumbnails.forEach((thumbnail, index) => {
+
+                const a = document.createElement('a');
+                a.href = thumbnail.src;
+                a.download = thumbnail.getAttribute('download-name');
+                a.click();
+            });
+        });
+        function imgToGif(file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const gif = canvas.toDataURL('image/gif');
+                    const oriName = file.name;
+                    console.log(oriName);
+                    let container = document.createElement('div');
+
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = gif;
+                    thumbnail.setAttribute('download-name', oriName + '_1frame' + '.gif');
+                    container.classList.add('thumbnail');
+                    container.onclick = function () {
+                        const a = document.createElement('a');
+                        a.href = gif;
+                        a.download = oriName + '_1frame' + '.gif';
+                        a.click();
+                    };
+
+                    thumbnailsContainer.appendChild(container);
+                    container.appendChild(thumbnail);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+
+    </script>
+</body>
+
+</html>
