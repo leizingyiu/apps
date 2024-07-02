@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Convert Image to GIF</title>
+    <style>
+        body {
+            /* display: flex; */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #dropzone {
+            border: 2px dashed #ccc;
+            /* padding: 20px; */
+            text-align: center;
+            width: 96%;
+            height: 96%;
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 93%;
+            position: fixed;
+            bottom: 8em;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            object-fit: contain;
+            background: #fff5;
+            cursor: pointer;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dropzone">
+        <p>Drag and drop an image file here to convert it to GIF</p>
+    </div>
+    <div id="thumbnails"></div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const thumbnailsContainer = document.getElementById('thumbnails');
+        const downloadAllBtn = document.createElement('button');
+        downloadAllBtn.innerText = 'Download All GIFs';
+        thumbnailsContainer.appendChild(downloadAllBtn);
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.border = '2px dashed #333';
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.border = '2px dashed #ccc';
+        });
+
+        dropzone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropzone.style.border = '2px dashed #ccc';
+
+            try {
+                let file;
+                if (e.dataTransfer.files.length > 0) {
+                    files = e.dataTransfer.files;
+                    for (let i = 0; i < files.length; i++) {
+                        file = files[i];
+                        imgToGif(file)
+                    }
+                } else {
+                    const imgUrl = e.dataTransfer.getData('URL');
+                    if (imgUrl) {
+
+                        const response = await fetch(imgUrl, { mode: 'cors' });
+                        const blob = await response.blob();
+                        file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+                    }
+                    // if (file && file.type.startsWith('image/')) {
+                    if (file) {
+                        imgToGif(file)
+                    } else {
+                        alert('Please drop an image file!');
+                    }
+                }
+
+
+            } catch (e) { alert(e); }
+        });
+
+        downloadAllBtn.addEventListener('click', () => {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumbnail, index) => {
+                const a = document.createElement('a');
+                a.href = thumbnail.src;
+                a.download = `image_${index}.gif`;
+                a.click();
+            });
+        });
+        function imgToGif(file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const gif = canvas.toDataURL('image/gif');
+
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = gif;
+                    thumbnail.classList.add('thumbnail');
+                    thumbnail.onclick = function () {
+                        const a = document.createElement('a');
+                        a.href = gif;
+                        a.download = 'image.gif';
+                        a.click();
+                    };
+
+                    thumbnailsContainer.appendChild(thumbnail);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+
+</html>
