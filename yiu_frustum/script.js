@@ -365,6 +365,13 @@ function drawFrustum(topDiameter, bottomDiameter, height) {
         "height": height
     });
 
+    updateCookies(
+        {
+            "topDiameter": topDiameter,
+            "bottomDiameter": bottomDiameter,
+            "height": height
+        }
+    )
     requestAnimationFrame(updateTransform);
 
 }
@@ -446,10 +453,21 @@ window.addEventListener('load', function () {
     try {
 
 
+        const cookiesJson = getCookiesAsJson();
+        console.log(cookiesJson); // 打印结果
+
+
         const drawFrustumParams = 'topDiameter,bottomDiameter,height'.split(',');
         const urlParams = new URLSearchParams(window.location.search);
-        const initDrawParams = filterAndSortParams(urlParams, drawFrustumParams);
+        let initDrawParams = filterAndSortParams(urlParams, drawFrustumParams);
         console.log(urlParams, initDrawParams);
+        console.log(typeof urlParams);
+
+        if (initDrawParams.filter(Boolean).length == 0) {
+            initDrawParams = filterAndSortParams(cookiesJson, drawFrustumParams);
+        }
+        console.log(initDrawParams);
+
         drawFrustum.apply(null, initDrawParams);
     } catch (e) {
         drawFrustum();
@@ -474,8 +492,12 @@ function updateInputValue(id, value) {
     }
 }
 
-function filterAndSortParams(urlSearchParams, needParamsArr) {
-    return needParamsArr.map(k => urlSearchParams.get(k) || undefined);;
+function filterAndSortParams(urlSearchParamsOrJson, needParamsArr) {
+    try {
+        return needParamsArr.map(k => urlSearchParamsOrJson.get(k) || undefined);
+    } catch (e) {
+        return needParamsArr.map(k => urlSearchParamsOrJson[k] || undefined);
+    }
 }
 
 
@@ -489,3 +511,43 @@ function updateUrlSearchParams(newParams) {
     window.history.pushState({}, '', url);
 }
 
+
+function updateCookies(newParams, cookieOptions = {}) {
+    // 写入 Cookies
+    for (const [key, value] of Object.entries(newParams)) {
+        let cookieString = `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+
+        // 添加过期时间
+        if (cookieOptions.expires) {
+            const expiresDate = new Date();
+            expiresDate.setTime(expiresDate.getTime() + (cookieOptions.expires * 24 * 60 * 60 * 1000)); // 以天为单位
+            cookieString += `; expires=${expiresDate.toUTCString()}`;
+        }
+
+        // 添加其他选项
+        if (cookieOptions.path) {
+            cookieString += `; path=${cookieOptions.path}`;
+        }
+        if (cookieOptions.secure) {
+            cookieString += '; secure';
+        }
+        if (cookieOptions.sameSite) {
+            cookieString += `; SameSite=${cookieOptions.sameSite}`;
+        }
+
+        document.cookie = cookieString;
+    }
+}
+
+
+function getCookiesAsJson() {
+    const cookies = document.cookie.split('; ');
+    const cookieJson = {};
+
+    cookies.forEach(cookie => {
+        const [key, value] = cookie.split('=');
+        cookieJson[decodeURIComponent(key)] = decodeURIComponent(value);
+    });
+
+    return cookieJson;
+}
