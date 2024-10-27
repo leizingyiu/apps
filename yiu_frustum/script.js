@@ -1,3 +1,6 @@
+// by Leizingyiu
+// Created: 2024/10/19
+// Last modified: "2024/10/28 02:53:20"
 
 let init = false;
 [...document.querySelectorAll('input')].forEach(i => {
