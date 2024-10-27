@@ -1,6 +1,6 @@
 // by Leizingyiu
 // Created: 2024/10/19
-// Last modified: "2024/10/28 02:53:20"
+// Last modified: "2024/10/28 02:54:33"
 
 let init = false;
 [...document.querySelectorAll('input')].forEach(i => {
@@ -457,19 +457,14 @@ window.addEventListener('load', function () {
 
 
         const cookiesJson = getCookiesAsJson();
-        console.log(cookiesJson); // 打印结果
-
 
         const drawFrustumParams = 'topDiameter,bottomDiameter,height'.split(',');
         const urlParams = new URLSearchParams(window.location.search);
         let initDrawParams = filterAndSortParams(urlParams, drawFrustumParams);
-        console.log(urlParams, initDrawParams);
-        console.log(typeof urlParams);
 
         if (initDrawParams.filter(Boolean).length == 0) {
             initDrawParams = filterAndSortParams(cookiesJson, drawFrustumParams);
         }
-        console.log(initDrawParams);
 
         drawFrustum.apply(null, initDrawParams);
     } catch (e) {
