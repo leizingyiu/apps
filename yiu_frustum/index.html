@@ -6,276 +6,45 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
     <title>Frustum Unfolding with Drag, Zoom, and
-        Save - by leizingyiu </title>
-    <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .input-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: white;
-            padding: 10px;
-            border: 1px solid black;
-            border-radius: 5px;
-            z-index: 10;
-            /* 保证 div 在最上层 */
-        }
-
-        svg {
-            width: 100vw;
-            height: 100vh;
-            border: 1px solid lightgray;
-            cursor: grab;
-        }
-
-        input {
-            display: block;
-            margin-bottom: 5px;
-        }
-    </style>
+        Save - by Leizingyiu
+    </title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 
 <body>
     <div class="input-container">
-        <label>上直径: <input type="number"
-                id="topDiameter" value=80
+        <label>上直径:
+            <input type="number" id="topDiameter"
+                value=80
                 placeholder="上直径"></label>
-        <label>下直径: <input type="number"
+        <label>下直径:
+            <input type="number"
                 id="bottomDiameter" value=65
                 placeholder="下直径"></label>
-        <label>高: <input type="number" id="height"
+        <label>高:
+            <input type="number" id="height"
                 value=80 placeholder="高"></label>
-        <button
-            onclick="drawFrustum()">绘制</button>
+        <div>
+            <button
+                onclick="drawFrustum()">绘制</button>
+            <button
+                onclick="showInWindow()">复位显示</button>
+            <button
+                onclick="downloadSVG()">下载SVG</button>
+        </div>
     </div>
 
-    <svg id="svgCanvas">
+    <svg id="svgCanvas"
+        ontouchstart="touchStart(event)"
+        ontouchmove="touchMove(event)">
         <g id="contentGroup"></g>
-        <!-- 所有图形内容都放在这个 g 元素中 -->
     </svg>
 
-    <style>
-        #contentGroup {
-            transform-origin: center;
-        }
-    </style>
-    <script>
-        let init = false;
-        [...document.querySelectorAll('input')].forEach(i => {
-            i.addEventListener('input', function () {
-                const allInputsValid = [...document.querySelectorAll('input')]
-                    .map(input => input.value) // 获取所有输入框的值
-                    .filter(value => value !== '' && !isNaN(value)).length === 3;
 
-                if (allInputsValid) {
-                    drawFrustum(); // 如果输入都是有效数字，调用 drawFrustum
-                }
-            });
-        });
+    <link rel="stylesheet" href="./style.css">
 
-        let isDragging = false;
-        let lastX = 0, lastY = 0;
-        let offsetX = 0, offsetY = 0;
-        let scale = 1;
-        let radianAngle = 0, angle = 0;
-
-        const svg = document.getElementById('svgCanvas');
-        const contentGroup = document.getElementById('contentGroup');
-
-        // 添加拖拽和缩放功能
-        svg.addEventListener('mousedown', (e) => {
-            // 如果鼠标在输入框上，不执行拖拽
-            if (e.target.closest('.input-container')) return;
-
-            isDragging = true;
-            lastX = e.clientX;
-            lastY = e.clientY;
-            svg.style.cursor = 'grabbing';
-        });
-
-        svg.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                const dx = e.clientX - lastX;
-                const dy = e.clientY - lastY;
-                offsetX += dx;
-                offsetY += dy;
-                lastX = e.clientX;
-                lastY = e.clientY;
-                updateTransform();
-            }
-        });
-
-        svg.addEventListener('mouseup', () => {
-            isDragging = false;
-            svg.style.cursor = 'grab';
-        });
-
-        svg.addEventListener('mouseleave', () => {
-            isDragging = false;
-            svg.style.cursor = 'grab';
-        });
-
-        svg.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const zoomFactor = 0.1;
-            const direction = e.deltaY > 0 ? -1 : 1;  // 滚轮向上：放大；滚轮向下：缩小
-            scale *= 1 + direction * zoomFactor;
-            updateTransform();
-        });
-
-        function updateTransform() {
-            const transform = `translate(${offsetX}, ${offsetY}) scale(${scale}) rotate(${-angle / 2 - 90})`;
-            contentGroup.setAttribute('transform', transform); // 移动和缩放的是 g 标签，而不是整个 svg
-        }
-
-
-        function drawFrustum() {
-            // 获取输入的值
-            const topDiameter = parseFloat(document.getElementById('topDiameter').value);
-            const bottomDiameter = parseFloat(document.getElementById('bottomDiameter').value);
-            const height = parseFloat(document.getElementById('height').value);
-
-
-            // 清空之前的 SVG 内容
-            contentGroup.innerHTML = '';
-
-            if (isNaN(topDiameter) || isNaN(bottomDiameter) || isNaN(height) || height <= 0) {
-                alert("请输入有效的上直径、下直径和高度！");
-                return;
-            }
-
-            // 计算大圆锥的高 h_cone
-
-            let r = Math.min(topDiameter, bottomDiameter) / 2, R = Math.max(topDiameter, bottomDiameter) / 2;
-            let h = height;
-            let h_cone = h * R / (R - r);
-
-            // 计算小圆锥的高 h_small_cone
-            const h_small_cone = h_cone - height;
-
-            // 计算大圆的半径 r_large 和小圆的半径 r_small
-            const r_large = h_cone;
-            const r_small = h_small_cone;
-
-            // 计算展开的圆台在圆中的角度 angle
-            angle = (Math.max(bottomDiameter, topDiameter) / 2) / h_cone * 360;
-
-            // 定义圆心位置
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-
-            // 绘制大圆
-            const largeCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            largeCircle.setAttribute('cx', centerX);
-            largeCircle.setAttribute('cy', centerY);
-            largeCircle.setAttribute('r', r_large);
-            largeCircle.setAttribute('fill', 'none');
-            largeCircle.setAttribute('stroke', 'black');
-            largeCircle.setAttribute('stroke-width', '3');
-            contentGroup.appendChild(largeCircle);
-
-            // 绘制小圆
-            const smallCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            smallCircle.setAttribute('cx', centerX);
-            smallCircle.setAttribute('cy', centerY);
-            smallCircle.setAttribute('r', r_small);
-            smallCircle.setAttribute('fill', 'none');
-            smallCircle.setAttribute('stroke', 'black');
-            smallCircle.setAttribute('stroke-width', '3');
-            contentGroup.appendChild(smallCircle);
-
-            // 计算角度的弧度值
-            radianAngle = angle * (Math.PI / 180);
-
-            // 计算两条线的端点
-            const x1 = centerX + r_large * Math.cos(0);
-            const y1 = centerY + r_large * Math.sin(0);
-
-            const x2 = centerX + r_large * Math.cos(radianAngle);
-            const y2 = centerY + r_large * Math.sin(radianAngle);
-
-            // 绘制第一条线
-            const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line1.setAttribute('x1', centerX);
-            line1.setAttribute('y1', centerY);
-            line1.setAttribute('x2', x1);
-            line1.setAttribute('y2', y1);
-            line1.setAttribute('stroke', 'black');
-            line1.setAttribute('stroke-width', '3');
-            contentGroup.appendChild(line1);
-
-            // 绘制第二条线
-            const line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line2.setAttribute('x1', centerX);
-            line2.setAttribute('y1', centerY);
-            line2.setAttribute('x2', x2);
-            line2.setAttribute('y2', y2);
-            line2.setAttribute('stroke', 'black');
-            line2.setAttribute('stroke-width', '3');
-            contentGroup.appendChild(line2);
-
-            // 绘制圆台的填充部分
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            const arcFlag = angle > 180 ? 1 : 0;
-            const pathData = `
-                M ${x1} ${y1} 
-                A ${r_large} ${r_large} 0 ${arcFlag} 1 ${x2} ${y2}
-                L ${centerX + r_small * Math.cos(radianAngle)} ${centerY + r_small * Math.sin(radianAngle)}
-                A ${r_small} ${r_small} 0 ${arcFlag} 0 ${centerX + r_small * Math.cos(0)} ${centerY + r_small * Math.sin(0)}
-                Z
-            `;
-            path.setAttribute('d', pathData);
-            path.setAttribute('fill', 'blue');
-            path.setAttribute('stroke', 'none');
-            contentGroup.appendChild(path);
-
-            if (init == false) {
-                const w = r_large * 2; // 图形的宽度（大圆的直径）
-                const h = r_large * 2; // 图形的高度（大圆的直径）
-                const W = window.innerWidth; // 窗口的宽度
-                const H = window.innerHeight; // 窗口的高度
-
-                // 计算出适应窗口的缩放比例
-                scale = Math.min(W / w, H / h);
-
-                // // 将图形居中显示的偏移量
-                // offsetX = (w * (1 - scale)) * scale / 2; // 居中的X偏移量
-                // offsetY = (h * (1 - scale)) * scale / 2; // 居中的Y偏移量
-                updateTransform();
-                init = true;
-            }
-        }
-
-        // 下载 SVG 文件的功能
-        document.addEventListener('keydown', function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault(); // 阻止默认的保存行为
-                downloadSVG();
-            }
-        });
-
-        function downloadSVG() {
-            const svgData = new XMLSerializer().serializeToString(svg);
-            const blob = new Blob([svgData], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'yiu_frustum.svg';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        window.onload = function () {
-            drawFrustum();
-        }
-    </script>
+    <script src="./script.js"></script>
 </body>
 
 </html>

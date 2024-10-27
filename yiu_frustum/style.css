@@ -1,0 +1,62 @@
+  body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .input-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+            z-index: 10;
+            /* 保证 div 在最上层 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-container * {
+            flex-grow: 99;
+        }
+
+        .input-container label {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-container label input {
+            box-sizing: border-box;
+            width: 100%;
+            /* 或者使用 flex 布局的属性 */
+        }
+
+        svg {
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid lightgray;
+            cursor: grab;
+        }
+
+        input {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        * {
+            pointer-events: none;
+        }
+
+        button,
+        input,
+        label,
+        svg,
+        svg * {
+            pointer-events: all !important;
+        }
+#contentGroup {
+            transform-origin: center;
+        }
