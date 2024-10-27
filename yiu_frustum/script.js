@@ -380,6 +380,8 @@ function showInWindow() {
 
     // // 将图形居中显示的偏移量 offsetX = (w * (1 - scale)) * scale / 2; // 居中的X偏移量 offsetY =
     // (h * (1 - scale)) * scale / 2; // 居中的Y偏移量
+
+    translateX = 0, translateY = 0;
     updateTransform();
 }
 
