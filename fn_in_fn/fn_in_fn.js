@@ -1,10 +1,10 @@
 
 const defaultOptions = {
-    beforeFunction: '// {name} function \n',
-    beforeBody: '\nvar {ranID}=(function(){\n',
-    body: '\t{body}',
-    afterBody: '})();\nreturn {ranID};',
-    afterFunction: '\n// {name} function ends here\n',
+    beforeFunction: '// {name} function \\n',
+    beforeBody: '\\nvar {ranID}=(function(){\\n',
+    body: '\\t{body}',
+    afterBody: '})();\\nreturn {ranID};',
+    afterFunction: '\\n// {name} function ends here\\n',
 };
 
 const inputBox = document.getElementById('input'),
@@ -55,35 +55,48 @@ document.querySelectorAll('dt').forEach(dt => {
     });
 });
 
- function saveToLocalStorage() {
+function saveToLocalStorage() {
     const inputs = document.querySelectorAll('input');
     inputs.forEach(input => {
         localStorage.setItem(input.id, input.value);
     });
     localStorage.setItem('textareaInput', plainText(inputBox));
     localStorage.setItem('textareaOutput', outputBox.innerText);
+    if (!localStorage.getItem('firstVisit')) {
+        localStorage.setItem('firstVisit', 'true');
+    }
 }
 
- function loadFromLocalStorage() {
+function loadFromLocalStorage() {
     const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        const value = localStorage.getItem(input.id);
-        if (value !== null) {
-            input.value = value;
+
+    if (!localStorage.getItem('firstVisit')) {
+        Object.keys(defaultOptions).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) {
+                input.value = defaultOptions[key];
+            }
+        });
+    } else {
+        inputs.forEach(input => {
+            const value = localStorage.getItem(input.id);
+            if (value !== null) {
+                input.value = value;
+            }
+        });
+        const textareaInputValue = localStorage.getItem('textareaInput');
+        if (textareaInputValue !== null) {
+            inputBox.innerText = textareaInputValue;
         }
-    });
-    const textareaInputValue = localStorage.getItem('textareaInput');
-    if (textareaInputValue !== null) {
-        inputBox.innerText = textareaInputValue;
-    }
-    const textareaOutputValue = localStorage.getItem('textareaOutput');
-    if (textareaOutputValue !== null) {
-        outputBox.innerText = textareaOutputValue;
+        const textareaOutputValue = localStorage.getItem('textareaOutput');
+        if (textareaOutputValue !== null) {
+            outputBox.innerText = textareaOutputValue;
+        }
     }
     updateProcessedCode();
 }
 
- window.addEventListener('load', loadFromLocalStorage);
+window.addEventListener('load', loadFromLocalStorage);
 
 
 function processFunctions(code, options) {
@@ -104,7 +117,7 @@ function processFunctions(code, options) {
     let fns = [];
     let newcode = code;
     code.replace(
-        /(\bfunction\s+(\w+)?\s*\([^)]*\)\s*{)|(((const)|(var)|(let))\s*(\w+)\s*=\s*\([^)]*\)\s*=>\s*{?)/g,
+        /(\bfunction\s+(\w+)?\s*\([^)]*\)\s*{)|(((const)|(var)|(let))\s*(\w+)\s*=\s*\([^)]*\)\s*=>\s*{)/g,
         (match, p1, p2, p3, p4, p5, p6, p7, p8, offset, string) => {
             let endBracketIndex = findMatchingBracket(string, offset + match.length - 1);
             if (endBracketIndex === -1) {

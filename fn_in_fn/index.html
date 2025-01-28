@@ -61,6 +61,8 @@
         .container dl dd {
             flex: 1;
             display: flex;
+            min-width: 0;
+            overflow: auto;
         }
 
         .container dl dt div#input,
@@ -139,8 +141,8 @@
         }
 
         #resizer {
-            width: 1em !important;
-            background-color: antiquewhite;
+            width: 0.5em !important;
+            background-color:#ccc;
             cursor: col-resize;
         }
     </style>
@@ -151,13 +153,22 @@
     <div class="container">
         <dl>
             <dt>
-                <!-- <textarea id="input" placeholder="Textarea 1"></textarea> -->
                 <div id="input"
-                    contenteditable="true"></div>
+                    contenteditable="true">
+function test(a, b) {
+return a + b+ 1;
+}
+
+const arrowFn = (a, b) => a + b + 2 ;
+
+
+const complex = (a, b) => {
+return a + b + 2 ;
+}
+                </div>
                 <div id="resizer"></div>
             </dt>
             <dd>
-                <!-- <textarea id="output" placeholder="Textarea 2"></textarea> -->
                 <div id="output"
                     contenteditable="true"></div>
             </dd>
