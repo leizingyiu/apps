@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <title>fn_in_fn by leizingyiu</title>
+    <style>
+        html,
+        body {
+            height: 100vh;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            padding: 2em;
+            box-sizing: border-box;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            /* Prevent container from causing body to scroll */
+
+            position: relative;
+        }
+
+        .container dl {
+            display: flex;
+            justify-content: space-between;
+            padding: 1vh;
+            gap: 2vh;
+            height: 100%;
+
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+        }
+
+        .container dl>*,
+        .container dl>*>* {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            width: -webkit-fill-available;
+            height: -webkit-fill-available;
+        }
+
+        .container dl dt,
+        .container dl dd {
+            flex: 1;
+            display: flex;
+        }
+
+        .container dl dt div#input,
+        .container dl dd div#output {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            white-space: pre;
+            text-align: left;
+            padding: 0.5em;
+            overflow-y: scroll;
+            box-sizing: border-box;
+            border: 1px solid lightgray;
+        }
+
+        .container dl dt div#input::-webkit-scrollbar,
+        .container dl dd div#output::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .container dl dt div#input:hover::-webkit-scrollbar,
+        .container dl dd div#output:hover::-webkit-scrollbar {
+            width: 10px;
+        }
+
+
+        .form-container {
+            padding: 1em;
+        }
+
+        dt {
+            float: left;
+            clear: left;
+            width: 100px;
+            text-align: right;
+            margin-right: 1em;
+        }
+
+
+        .form-container ol {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .form-container ol li {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .form-container ol li dl {
+            display: flex;
+            width: 100%;
+        }
+
+        .form-container ol li dl dt {
+            width: 120px;
+            /* Adjusted width for better alignment */
+            text-align: left;
+            /* Align text to the left */
+        }
+
+        .form-container ol li dl dd {
+            width: calc(100% - 150px);
+            /* Adjusted width to match dt */
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container input {
+            width: 100%;
+        }
+
+        .form-container dd {
+            width: 100%;
+        }
+
+        #resizer {
+            width: 1em !important;
+            background-color: antiquewhite;
+            cursor: col-resize;
+        }
+    </style>
+    <script src="./diff.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <dl>
+            <dt>
+                <!-- <textarea id="input" placeholder="Textarea 1"></textarea> -->
+                <div id="input"
+                    contenteditable="true"></div>
+                <div id="resizer"></div>
+            </dt>
+            <dd>
+                <!-- <textarea id="output" placeholder="Textarea 2"></textarea> -->
+                <div id="output"
+                    contenteditable="true"></div>
+            </dd>
+        </dl>
+    </div>
+    <div class="form-container">
+        <ol>
+            <li>{name} for function name ; {body}
+                for function body ; \t At the
+                front of body for indentation of
+                function body ; </li>
+            <li>
+                <dl>
+                    <dt>Title 1:</dt>
+                    <dd><input id="beforeFunction"
+                            type="text"></dd>
+                </dl>
+            </li>
+
+            <li>
+                <dl>
+                    <dt>Title 3:</dt>
+                    <dd><input id="beforeBody"
+                            type="text"></dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>Title 5:</dt>
+                    <dd><input id="body"
+                            type="text"></dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>Title 4:</dt>
+                    <dd><input id="afterBody"
+                            type="text"></dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>Title 2:</dt>
+                    <dd><input id="afterFunction"
+                            type="text"></dd>
+                </dl>
+            </li>
+        </ol>
+    </div>
+    <script src="./resize_dtdd.js"></script>
+    <script src="./fn_in_fn.js"></script>
+
+</body>
+
+</html>
