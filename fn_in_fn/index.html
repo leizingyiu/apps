@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
-    <title>fn_in_fn by leizingyiu</title>
+    <title>js_prePreFnSuSuFixer by leizingyiu
+    </title>
     <style>
         * {
             margin: 0;
@@ -136,12 +137,13 @@
 
         }
 
-        .form-container>dl>dd>div {
+        .form-container>dl>dd>pre {
             border: solid 1px #ccc;
             padding: 0.5em;
             margin: 0;
             height: 100%;
-            width: 100%;
+            width: 50%;
+            text-wrap: auto;
         }
 
 
@@ -226,8 +228,10 @@
         [yiu-hint]::before {
             content: attr(yiu-hint);
             position: absolute;
-            top: -0.1em;
-            left: -0.1em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-wrap: nowrap;
             display: block;
             padding: 0.5em;
             line-height: 1em;
@@ -236,13 +240,15 @@
             border-radius: 0.3em;
             user-select: none;
             pointer-events: none;
-            opacity: 0.1;
+            opacity: 0.3;
             transition: opacity 0.3s;
             backdrop-filter: none;
+            white-space: pre;
         }
 
         [yiu-hint]:focus:before {
-            opacity: 0;
+            opacity: 0 !important;
+            backdrop-filter: none !important;
         }
 
         [yiu-hint]:hover:before {
@@ -250,6 +256,7 @@
             backdrop-filter: blur(2px);
         }
     </style>
+
 </head>
 
 <body>
@@ -330,15 +337,16 @@ return a + b + 2 ;
         </ol>
         <dl>
             <dt><b>Fn</b>s for Fn{[(anything)]}
+                while processing
             </dt>
             <dd>
-                <div id="fnsIn"
+                <pre id="fnsIn"
                     contenteditable="true"
-                    yiu-hint="Enter function to run during processing">
+                    yiu-hint="Enter function(s) to run during processing">
                     function upper(text){return
                     text.toUpperCase();}
-                </div>
-                <div id="fnsOut"></div>
+                </pre>
+                <pre id="fnsOut"></pre>
             </dd>
         </dl>
     </div>
