@@ -7,6 +7,16 @@
         content="width=device-width, initial-scale=1.0">
     <title>fn_in_fn by leizingyiu</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 4px;
+            /* outline: none; */
+            --border: 1px solid lightgray;
+            --active-border: 1px solid #999;
+        }
+
         html,
         body {
             height: 100vh;
@@ -65,8 +75,8 @@
             overflow: auto;
         }
 
-        .container dl dt div#input,
-        .container dl dd div#output {
+        .container dl dt #input,
+        .container dl dd #output {
             width: 100%;
             height: 100%;
             resize: none;
@@ -78,108 +88,209 @@
             border: 1px solid lightgray;
         }
 
-        .container dl dt div#input::-webkit-scrollbar,
-        .container dl dd div#output::-webkit-scrollbar {
+        .container dl dt #input::-webkit-scrollbar,
+        .container dl dd #output::-webkit-scrollbar {
             width: 5px;
         }
 
-        .container dl dt div#input:hover::-webkit-scrollbar,
-        .container dl dd div#output:hover::-webkit-scrollbar {
+        .container dl dt #input:hover::-webkit-scrollbar,
+        .container dl dd #output:hover::-webkit-scrollbar {
             width: 10px;
         }
 
 
         .form-container {
             padding: 1em;
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+            position: relative;
+            --gap-size: 0.5rem;
         }
 
-        dt {
-            float: left;
-            clear: left;
-            width: 100px;
-            text-align: right;
-            margin-right: 1em;
+        .form-container>dl {
+            flex: 0 0 20%;
+            margin: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: var(--gap-size);
+            min-width: min(30vw, 500px);
+            max-width: 30vw !important;
+
+
         }
+
+        .form-container>dl>dt,
+        .form-container>dl>dd {
+            margin: var(--gap-size) 0;
+        }
+
+        .form-container>dl>dd {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+            gap: var(--gap-size);
+
+        }
+
+        .form-container>dl>dd>div {
+            border: solid 1px #ccc;
+            padding: 0.5em;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+
 
 
         .form-container ol {
+            width: 100%;
+
             list-style-type: none;
             padding: 0;
+            margin: 0 var(--gap-size);
+
         }
 
         .form-container ol li {
             margin: 0;
             padding: 0;
             width: 100%;
+            margin: var(--gap-size);
         }
 
         .form-container ol li dl {
             display: flex;
             width: 100%;
+            --left-width: 150px;
+            margin: 0;
         }
 
         .form-container ol li dl dt {
-            width: 120px;
+            width: var(--left-width);
             /* Adjusted width for better alignment */
             text-align: left;
             /* Align text to the left */
+            float: left;
+            clear: left;
+            margin-right: 1em;
         }
 
         .form-container ol li dl dd {
-            width: calc(100% - 150px);
+            width: calc(100% - var(--left-width));
             /* Adjusted width to match dt */
             margin: 0;
             padding: 0;
+
         }
 
-        .form-container input {
+        .form-container ol li dl dd input {
             width: 100%;
+            padding: 0.25em;
+            border: var(--border);
         }
 
-        .form-container dd {
-            width: 100%;
-        }
+
+
+
 
         #resizer {
             width: 0.5em !important;
-            background-color:#ccc;
+            background-color: #ccc;
             cursor: col-resize;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        #resizer:hover {
+            opacity: 1;
+        }
+
+        i {
+            padding: 0.1em 0.4em;
+            background-color: #eee;
+            text-decoration: none;
+            font-style: normal;
+            border: solid 1px #ccc;
+            line-height: 2em;
+        }
+
+        [yiu-hint] {
+            position: relative
+        }
+
+        [yiu-hint]::before {
+            content: attr(yiu-hint);
+            position: absolute;
+            top: -0.1em;
+            left: -0.1em;
+            display: block;
+            padding: 0.5em;
+            line-height: 1em;
+            columns: #aaa;
+            background-color: #eee;
+            border-radius: 0.3em;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+            backdrop-filter: none;
+        }
+
+        [yiu-hint]:focus:before {
+            opacity: 0;
+        }
+
+        [yiu-hint]:hover:before {
+            opacity: 0.8;
+            backdrop-filter: blur(2px);
         }
     </style>
-    <script src="./diff.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <dl>
             <dt>
-                <div id="input"
-                    contenteditable="true">
-function test(a, b) {
+                <pre id="input"
+                    contenteditable="true"
+                    yiu-hint="Enter the js code here">function test(a, b) {
 return a + b+ 1;
 }
 
-const arrowFn = (a, b) => a + b + 2 ;
+const arrowFn = (a, b) => a +
+b + 2 ;
 
 
 const complex = (a, b) => {
 return a + b + 2 ;
-}
-                </div>
+}</pre>
                 <div id="resizer"></div>
             </dt>
             <dd>
-                <div id="output"
-                    contenteditable="true"></div>
+                <pre id="output"
+                    contenteditable="true"
+                    yiu-hint="The processed js code will be output here">
+                </pre>
             </dd>
         </dl>
     </div>
     <div class="form-container">
         <ol>
-            <li>{name} for function name ; {body}
-                for function body ; \t At the
+            <li><i>{name}</i> for function name ;
+                <i>{body}</i>
+                for function body ; <i>\t</i> At
+                the
                 front of body for indentation of
-                function body ; </li>
+                function body ;
+                <br><i><b>Fn</b>{[(</i>
+                anything or {body} <i>)]}</i> to
+                Fn(fn_body_string) in replacement
+            </li>
             <li>
                 <dl>
                     <dt>Title 1:</dt>
@@ -217,10 +328,23 @@ return a + b + 2 ;
                 </dl>
             </li>
         </ol>
+        <dl>
+            <dt><b>Fn</b>s for Fn{[(anything)]}
+            </dt>
+            <dd>
+                <div id="fnsIn"
+                    contenteditable="true"
+                    yiu-hint="Enter function to run during processing">
+                    function upper(text){return
+                    text.toUpperCase();}
+                </div>
+                <div id="fnsOut"></div>
+            </dd>
+        </dl>
     </div>
     <script src="./resize_dtdd.js"></script>
     <script src="./fn_in_fn.js"></script>
-
+    <script src="./ pagesettings.js"></script>
 </body>
 
 </html>

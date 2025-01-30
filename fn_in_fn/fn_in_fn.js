@@ -1,104 +1,24 @@
 
-const defaultOptions = {
-    beforeFunction: '// {name} function \\n',
-    beforeBody: '\\nvar {ranID}=(function(){\\n',
-    body: '\\t{body}',
-    afterBody: '})();\\nreturn {ranID};',
-    afterFunction: '\\n// {name} function ends here\\n',
-};
-
-const inputBox = document.getElementById('input'),
-    outputBox = document.getElementById('output');
-
 function plainText(dom) {
     return dom.innerText || dom.textContent
 }
+function getFnsFromTxt(txt) {
+    let fns = [];
 
-function updateProcessedCode() {
-    const code = plainText(inputBox);
-    const options = {
-        beforeFunction: document.getElementById('beforeFunction').value,
-        afterFunction: document.getElementById('afterFunction').value,
-        beforeBody: document.getElementById('beforeBody').value,
-        afterBody: document.getElementById('afterBody').value,
-        body: document.getElementById('body').value
-    };
-    const processedCode = processFunctions(code, options);
-    outputBox.innerText = processedCode;
-}
-
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', updateProcessedCode);
-
-    const dt = input.closest('dl').querySelector('dt');
-    dt.innerText = input.id;
-
-    input.addEventListener('input', saveToLocalStorage);
-
-});
-
-inputBox.addEventListener('input', updateProcessedCode);
-inputBox.addEventListener('input', saveToLocalStorage);
-
-
-
-Object.keys(defaultOptions).forEach(key => {
-    document.getElementById(key).placeholder = defaultOptions[key];
-});
-
-document.querySelectorAll('dt').forEach(dt => {
-    dt.addEventListener('click', () => {
-        const input = dt.nextElementSibling.querySelector('input');
-        if (input) {
-            input.focus();
-        }
-    });
-});
-
-function saveToLocalStorage() {
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        localStorage.setItem(input.id, input.value);
-    });
-    localStorage.setItem('textareaInput', plainText(inputBox));
-    localStorage.setItem('textareaOutput', outputBox.innerText);
-    if (!localStorage.getItem('firstVisit')) {
-        localStorage.setItem('firstVisit', 'true');
-    }
-}
-
-function loadFromLocalStorage() {
-    const inputs = document.querySelectorAll('input');
-
-    if (!localStorage.getItem('firstVisit')) {
-        Object.keys(defaultOptions).forEach(key => {
-            const input = document.getElementById(key);
-            if (input) {
-                input.value = defaultOptions[key];
+    txt.replace(
+        /(\bfunction\s+(\w+)?\s*\([^)]*\)\s*{)|(((const)|(var)|(let))\s*(\w+)\s*=\s*\([^)]*\)\s*=>\s*{)/g,
+        (match, p1, p2, p3, p4, p5, p6, p7, p8, offset, string) => {
+            let endBracketIndex = findMatchingBracket(string, offset + match.length - 1);
+            if (endBracketIndex === -1) {
+                return match; // 如果没有找到匹配的括号，返回原字符串
             }
-        });
-    } else {
-        inputs.forEach(input => {
-            const value = localStorage.getItem(input.id);
-            if (value !== null) {
-                input.value = value;
-            }
-        });
-        const textareaInputValue = localStorage.getItem('textareaInput');
-        if (textareaInputValue !== null) {
-            inputBox.innerText = textareaInputValue;
+            // 获取整个函数的完整部分
+            const fullFunction = string.substring(offset, endBracketIndex);
+            fns.push(fullFunction);
         }
-        const textareaOutputValue = localStorage.getItem('textareaOutput');
-        if (textareaOutputValue !== null) {
-            outputBox.innerText = textareaOutputValue;
-        }
-    }
-    updateProcessedCode();
+    );
+    return fns;
 }
-
-window.addEventListener('load', loadFromLocalStorage);
-
-
 function processFunctions(code, options) {
     let { beforeFunction = '', afterFunction = '', beforeBody = '', afterBody = '', body = '{body}' } = options,
         indentation = body.indexOf('\\t') == 0;
@@ -114,20 +34,9 @@ function processFunctions(code, options) {
         body += '\n{body}';
     }
 
-    let fns = [];
     let newcode = code;
-    code.replace(
-        /(\bfunction\s+(\w+)?\s*\([^)]*\)\s*{)|(((const)|(var)|(let))\s*(\w+)\s*=\s*\([^)]*\)\s*=>\s*{)/g,
-        (match, p1, p2, p3, p4, p5, p6, p7, p8, offset, string) => {
-            let endBracketIndex = findMatchingBracket(string, offset + match.length - 1);
-            if (endBracketIndex === -1) {
-                return match; // 如果没有找到匹配的括号，返回原字符串
-            }
-            // 获取整个函数的完整部分
-            const fullFunction = string.substring(offset, endBracketIndex);
-            fns.push(fullFunction);
-        }
-    );
+    let fns = getFnsFromTxt(code);
+
 
     for (var i = 0; i < fns.length; i++) {
         var _fn = fns[i];
@@ -169,6 +78,7 @@ function processFunctions(code, options) {
                 var result = `${resolvedBeforeFunction}${p1}${resolvedBeforeBody}${resolvedBody}\n${resolvedAfterBody}\n}${resolvedAfterFunction}`;
                 return result;
             });
+        _newfn = runFnsInFnTxt(_newfn);
         newcode = newcode.replace(_fn, _newfn);
     }
 
@@ -185,4 +95,13 @@ function findMatchingBracket(str, startIndex) {
         }
     }
     return -1;
+}
+
+function runFnsInFnTxt(text) {
+    return text.replace(/(\S+)\{\[\(([\s\S\n\r]*)\)\]\}/g, function (match, p1, p2) {
+        // console.log([...arguments].map((a, idx) => idx + ':' + a + '\n').join('\n'));
+        if (typeof window[p1] == 'function') {
+            return window[p1](p2);
+        }
+    });
 }
